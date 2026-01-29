@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Active Tenants - RentMS</title>
+  <link rel="icon" href="../assets/img/favicon/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/core.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" />
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="../assets/js/config.js"></script>
+</head>
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo"><a href="index.html" class="app-brand-link"><span class="app-brand-text demo menu-text fw-bolder ms-2">RentMS</span></a></div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item"><a href="index.html" class="menu-link"><i class="menu-icon bx bx-home-circle"></i><div>Dashboard</div></a></li>
+          <li class="menu-item active open">
+            <a href="javascript:void(0);" class="menu-link menu-toggle"><i class="menu-icon bx bx-group"></i><div>Tenants</div></a>
+            <ul class="menu-sub">
+              <li class="menu-item"><a href="tenants-list.html" class="menu-link"><div>All Tenants</div></a></li>
+              <li class="menu-item"><a href="tenants-add.html" class="menu-link"><div>Add Tenant</div></a></li>
+              <li class="menu-item"><a href="tenants-import.html" class="menu-link"><div>Bulk Import</div></a></li>
+              <li class="menu-item active"><a href="tenants-active.html" class="menu-link"><div>Active Tenants</div></a></li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
+      <div class="layout-page">
+        <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme">
+          <div class="navbar-nav-right d-flex align-items-center">
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item"><a href="index.html" class="btn btn-sm btn-primary"><i class="bx bx-home me-1"></i>Dashboard</a></li>
+            </ul>
+          </div>
+        </nav>
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Tenants /</span> Active Tenants</h4>
+            <div class="card">
+              <div class="card-header"><h5>Active Tenants (23)</h5></div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr><th>Tenant</th><th>Property</th><th>Lease End</th><th>Payment Status</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>John Smith</strong><br><small>john.smith@email.com</small></td>
+                        <td>Building A - Suite 101</td>
+                        <td>2026-05-31</td>
+                        <td><span class="badge bg-success">Current</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary"><i class="bx bx-show"></i></button></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Sarah Johnson</strong><br><small>sarah.j@email.com</small></td>
+                        <td>Building B - Suite 205</td>
+                        <td>2026-08-14</td>
+                        <td><span class="badge bg-success">Current</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary"><i class="bx bx-show"></i></button></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Michael Brown</strong><br><small>m.brown@email.com</small></td>
+                        <td>Building C - Suite 302</td>
+                        <td>2026-03-31</td>
+                        <td><span class="badge bg-success">Current</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary"><i class="bx bx-show"></i></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl py-2">© <script>document.write(new Date().getFullYear());</script> Rent Management System</div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../assets/vendor/js/bootstrap.js"></script>
+  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

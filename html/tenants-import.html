@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bulk Import Tenants - RentMS</title>
+  <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/core.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" />
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="../assets/js/config.js"></script>
+</head>
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo">
+          <a href="index.html" class="app-brand-link">
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">RentMS</span>
+          </a>
+        </div>
+        <div class="menu-inner-shadow"></div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item">
+            <a href="index.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <div>Dashboard</div>
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons bx bx-user"></i>
+              <div>Tenants</div>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="tenants-list.html" class="menu-link">
+                  <div>All Tenants</div>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a href="tenants-add.html" class="menu-link">
+                  <div>Add Tenant</div>
+                </a>
+              </li>
+              <li class="menu-item active">
+                <a href="tenants-import.html" class="menu-link">
+                  <div>Bulk Import</div>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="layout-page">
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold mb-0">Bulk Import Tenants from Excel</h4>
+              <a href="tenants-add.html" class="btn btn-outline-primary">
+                <i class="bx bx-plus me-1"></i> Add Single Tenant
+              </a>
+            </div>
+
+            <div class="row">
+              <div class="col-xl-8">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Upload Excel File</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                      <h6 class="alert-heading"><i class="bx bx-info-circle"></i> How it works</h6>
+                      <ol class="mb-0">
+                        <li>Download the template file below</li>
+                        <li>Fill in your tenant data (Name, Email, Phone, Property, Rent, etc.)</li>
+                        <li>Upload the completed Excel file</li>
+                        <li>System automatically creates properties, suites, rooms and assigns tenants</li>
+                      </ol>
+                    </div>
+
+                    <div class="mb-4">
+                      <a href="http://localhost:5000/api/import/template" class="btn btn-outline-primary" download>
+                        <i class="bx bx-download me-1"></i> Download Excel Template
+                      </a>
+                    </div>
+
+                    <form id="importForm" enctype="multipart/form-data">
+                      <div class="mb-3">
+                        <label class="form-label" for="excelFile">Select Excel File</label>
+                        <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls" required />
+                        <small class="text-muted">Supported formats: .xlsx, .xls</small>
+                      </div>
+
+                      <div id="filePreview" class="mb-3" style="display: none;">
+                        <div class="alert alert-success">
+                          <i class="bx bx-check-circle me-1"></i>
+                          <span id="fileName"></span>
+                        </div>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="bx bx-upload me-1"></i> Import Tenants
+                      </button>
+                      <a href="tenants-list.html" class="btn btn-outline-secondary ms-2">
+                        <i class="bx bx-x me-1"></i> Cancel
+                      </a>
+                    </form>
+
+                    <div id="progressSection" class="mt-4" style="display: none;">
+                      <h6>Import Progress</h6>
+                      <div class="progress mb-2">
+                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                      </div>
+                      <p id="progressText" class="text-muted mb-0">Processing...</p>
+                    </div>
+
+                    <div id="resultsSection" class="mt-4" style="display: none;">
+                      <h6>Import Results</h6>
+                      <div id="resultsContent"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-4">
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <h6 class="card-title">Excel Format Guide</h6>
+                    <p class="mb-3">Your Excel file should have these columns:</p>
+                    <ul class="list-unstyled">
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Name</strong> - Tenant full name (required)</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Email</strong> - Email address</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Phone</strong> - Phone number</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Property</strong> - Building/property name</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Rent</strong> - Monthly rent amount (required)</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Move In Date</strong> - Format: YYYY-MM-DD</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Lease End Date</strong></li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Emergency Contact</strong></li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Notes</strong></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <h6 class="card-title">Auto-Assignment Features</h6>
+                    <ul class="list-unstyled">
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Properties created automatically</li>
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Suites assigned by rent amount</li>
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Rooms created in each suite</li>
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Tenants with same rent share property</li>
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Suite numbers auto-generated</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../assets/vendor/js/bootstrap.js"></script>
+  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+  <script>
+    const fileInput = document.getElementById('excelFile');
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const progressSection = document.getElementById('progressSection');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsContent = document.getElementById('resultsContent');
+    const submitBtn = document.getElementById('submitBtn');
+
+    fileInput.addEventListener('change', function() {
+      if (this.files.length > 0) {
+        fileName.textContent = `Selected: ${this.files[0].name}`;
+        filePreview.style.display = 'block';
+      } else {
+        filePreview.style.display = 'none';
+      }
+    });
+
+    document.getElementById('importForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const file = fileInput.files[0];
+      if (!file) {
+        alert('Please select an Excel file');
+        return;
+      }
+
+      // Show progress
+      progressSection.style.display = 'block';
+      resultsSection.style.display = 'none';
+      submitBtn.disabled = true;
+      progressBar.style.width = '30%';
+      progressText.textContent = 'Uploading file...';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        progressBar.style.width = '60%';
+        progressText.textContent = 'Processing data...';
+
+        const response = await fetch('http://localhost:5000/api/import/bulk-upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        progressBar.style.width = '100%';
+        progressText.textContent = 'Complete!';
+
+        const result = await response.json();
+
+        setTimeout(() => {
+          progressSection.style.display = 'none';
+          resultsSection.style.display = 'block';
+
+          if (result.success) {
+            resultsContent.innerHTML = `
+              <div class="alert alert-success">
+                <h6 class="alert-heading"><i class="bx bx-check-circle"></i> Import Successful!</h6>
+                <p class="mb-2">${result.message}</p>
+                <hr>
+                <ul class="mb-0">
+                  <li><strong>Properties Created:</strong> ${result.result.propertiesCreated}</li>
+                  <li><strong>Tenants Imported:</strong> ${result.result.tenantsCreated}</li>
+                  <li><strong>Payments Created:</strong> ${result.result.paymentsCreated}</li>
+                </ul>
+                ${result.result.errors.length > 0 ? `
+                  <hr>
+                  <h6 class="text-warning mt-3">Errors (${result.result.errors.length}):</h6>
+                  <ul class="mb-0">
+                    ${result.result.errors.slice(0, 5).map(err => `<li class="text-warning">Row ${err.row}: ${err.error}</li>`).join('')}
+                    ${result.result.errors.length > 5 ? `<li class="text-muted">...and ${result.result.errors.length - 5} more</li>` : ''}
+                  </ul>
+                ` : ''}
+              </div>
+              <a href="tenants-list.html" class="btn btn-primary mt-3">
+                <i class="bx bx-list-ul me-1"></i> View All Tenants
+              </a>
+              <button onclick="location.reload()" class="btn btn-outline-secondary mt-3 ms-2">
+                <i class="bx bx-refresh me-1"></i> Import More
+              </button>
+            `;
+          } else {
+            resultsContent.innerHTML = `
+              <div class="alert alert-danger">
+                <h6 class="alert-heading"><i class="bx bx-error-circle"></i> Import Failed</h6>
+                <p class="mb-0">${result.error}</p>
+              </div>
+              <button onclick="location.reload()" class="btn btn-outline-primary mt-3">
+                <i class="bx bx-refresh me-1"></i> Try Again
+              </button>
+            `;
+          }
+        }, 500);
+
+      } catch (error) {
+        progressSection.style.display = 'none';
+        resultsSection.style.display = 'block';
+        resultsContent.innerHTML = `
+          <div class="alert alert-danger">
+            <h6 class="alert-heading"><i class="bx bx-error-circle"></i> Upload Error</h6>
+            <p class="mb-0">${error.message}</p>
+          </div>
+          <button onclick="location.reload()" class="btn btn-outline-primary mt-3">
+            <i class="bx bx-refresh me-1"></i> Try Again
+          </button>
+        `;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

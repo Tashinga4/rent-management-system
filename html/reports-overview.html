@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports - Company Flat Rent Management System</title>
+  <link rel="icon" href="../assets/img/favicon/favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/core.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" />
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="../assets/js/config.js"></script>
+</head>
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo">
+          <a href="index.html" class="app-brand-link">
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">RentMS</span>
+          </a>
+        </div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item"><a href="index.html" class="menu-link"><i class="menu-icon bx bx-home-circle"></i><div>Dashboard</div></a></li>
+          <li class="menu-item"><a href="properties-list.html" class="menu-link"><i class="menu-icon bx bx-building-house"></i><div>Properties</div></a></li>
+          <li class="menu-item"><a href="tenants-list.html" class="menu-link"><i class="menu-icon bx bx-group"></i><div>Tenants</div></a></li>
+          <li class="menu-item"><a href="payments-all.html" class="menu-link"><i class="menu-icon bx bx-dollar-circle"></i><div>Payments</div></a></li>
+          <li class="menu-item"><a href="maintenance-requests.html" class="menu-link"><i class="menu-icon bx bx-wrench"></i><div>Maintenance</div></a></li>
+          <li class="menu-header small text-uppercase"><span class="menu-header-text">Reports & Settings</span></li>
+          <li class="menu-item active"><a href="reports-overview.html" class="menu-link"><i class="menu-icon bx bx-bar-chart"></i><div>Reports</div></a></li>
+        </ul>
+      </aside>
+      <div class="layout-page">
+        <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme">
+          <div class="navbar-nav-right d-flex align-items-center">
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item"><a href="index.html" class="btn btn-sm btn-primary"><i class="bx bx-home me-1"></i>Dashboard</a></li>
+            </ul>
+          </div>
+        </nav>
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4">Reports Overview</h4>
+            
+            <div class="row mb-4">
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="bx bx-dollar-circle me-2 text-success"></i>Financial Report</h5>
+                    <p class="card-text">Monthly income and expense analysis</p>
+                    <button class="btn btn-primary btn-sm"><i class="bx bx-download me-1"></i>Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="bx bx-building-house me-2 text-info"></i>Occupancy Report</h5>
+                    <p class="card-text">Property occupancy statistics</p>
+                    <button class="btn btn-primary btn-sm"><i class="bx bx-download me-1"></i>Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="bx bx-wrench me-2 text-warning"></i>Maintenance Report</h5>
+                    <p class="card-text">Maintenance costs and requests</p>
+                    <button class="btn btn-primary btn-sm"><i class="bx bx-download me-1"></i>Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="bx bx-group me-2 text-primary"></i>Tenant Report</h5>
+                    <p class="card-text">Tenant demographics and history</p>
+                    <button class="btn btn-primary btn-sm"><i class="bx bx-download me-1"></i>Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="bx bx-time me-2 text-danger"></i>Overdue Report</h5>
+                    <p class="card-text">Late and overdue payments</p>
+                    <button class="btn btn-primary btn-sm"><i class="bx bx-download me-1"></i>Generate</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title"><i class="bx bx-line-chart me-2 text-success"></i>Annual Summary</h5>
+                    <p class="card-text">Yearly performance overview</p>
+                    <button class="btn btn-primary btn-sm"><i class="bx bx-download me-1"></i>Generate</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h5>Quick Statistics</h5></div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3 mb-3 text-center">
+                    <h2 class="text-primary">95%</h2>
+                    <p>Occupancy Rate</p>
+                  </div>
+                  <div class="col-md-3 mb-3 text-center">
+                    <h2 class="text-success">$45,250</h2>
+                    <p>Monthly Revenue</p>
+                  </div>
+                  <div class="col-md-3 mb-3 text-center">
+                    <h2 class="text-warning">8</h2>
+                    <p>Pending Requests</p>
+                  </div>
+                  <div class="col-md-3 mb-3 text-center">
+                    <h2 class="text-info">24</h2>
+                    <p>Active Properties</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl py-2">© <script>document.write(new Date().getFullYear());</script> Rent Management System</div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../assets/vendor/js/bootstrap.js"></script>
+  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
