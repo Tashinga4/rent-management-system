@@ -4,14 +4,14 @@ const compartmentSchema = new mongoose.Schema({
   // Compartment Identification
   compartmentNumber: {
     type: String,
-    required: true,
+    required: [true, 'Compartment number is required'],
     unique: true,
     trim: true,
     index: true
   },
   name: {
     type: String,
-    required: true,
+    required: [true, 'Compartment name is required'],
     trim: true
   },
   
@@ -22,15 +22,25 @@ const compartmentSchema = new mongoose.Schema({
     default: 'room'
   },
   floor: Number,
-  squareMeters: Number,
-  bedrooms: Number,
-  bathrooms: Number,
+  squareMeters: {
+    type: Number,
+    min: [0, 'Square meters cannot be negative']
+  },
+  bedrooms: {
+    type: Number,
+    min: [0, 'Bedrooms cannot be negative']
+  },
+  bathrooms: {
+    type: Number,
+    min: [0, 'Bathrooms cannot be negative']
+  },
   
   // Availability & Status
   status: {
     type: String,
     enum: ['vacant', 'occupied', 'maintenance', 'reserved'],
-    default: 'vacant'
+    default: 'vacant',
+    index: true
   },
   
   // Tenant Information (ERD Relationship)
@@ -43,7 +53,8 @@ const compartmentSchema = new mongoose.Schema({
   // Lease Information
   rentAmount: {
     type: Number,
-    required: true
+    required: [true, 'Rent amount is required'],
+    min: [0, 'Rent amount cannot be negative']
   },
   leaseStart: Date,
   leaseEnd: Date,
@@ -51,7 +62,9 @@ const compartmentSchema = new mongoose.Schema({
   // Property Reference (ERD Relationship)
   property: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Property'
+    ref: 'Property',
+    required: [true, 'Property reference is required'],
+    index: true
   },
   
   // Amenities
@@ -64,7 +77,9 @@ const compartmentSchema = new mongoose.Schema({
   // Payment Information
   paymentDueDay: {
     type: Number,
-    default: 1
+    default: 1,
+    min: [1, 'Payment due day must be between 1 and 31'],
+    max: [31, 'Payment due day must be between 1 and 31']
   },
   lastPaymentDate: Date
 }, {
@@ -72,9 +87,6 @@ const compartmentSchema = new mongoose.Schema({
 });
 
 // Index for faster queries
-compartmentSchema.index({ status: 1 });
-compartmentSchema.index({ compartmentNumber: 1 });
 compartmentSchema.index({ tenant: 1 });
-compartmentSchema.index({ property: 1 });
 
 module.exports = mongoose.model('Compartment', compartmentSchema);
