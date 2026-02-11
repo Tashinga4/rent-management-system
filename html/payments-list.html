@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>Payment History - Rent Management System</title>
+  <meta name="description" content="View complete payment history and receipts" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  
+  <!-- Core CSS -->
+  <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+  
+  <!-- Page CSS -->
+  <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+  
+  <!-- Helpers -->
+  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="../assets/js/config.js"></script>
+</head>
+
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo">
+          <a href="index.html" class="app-brand-link">
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">RentMS</span>
+          </a>
+          <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+          </a>
+        </div>
+        <div class="menu-inner-shadow"></div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item">
+            <a href="index.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <div>Dashboard</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="tenants-list.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-group"></i>
+              <div>Tenants</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="compartments.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-building"></i>
+              <div>Compartments</div>
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a href="payments-list.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-dollar-circle"></i>
+              <div>Payment History</div>
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Layout container -->
+      <div class="layout-page">
+        <!-- Navbar -->
+        <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+          <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+              <i class="bx bx-menu bx-sm"></i>
+            </a>
+          </div>
+          <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+            <div class="navbar-nav align-items-center">
+              <div class="nav-item d-flex align-items-center">
+                <i class="bx bx-search fs-4 lh-0"></i>
+                <input type="text" class="form-control border-0 shadow-none" placeholder="Search payments..." id="searchInput" aria-label="Search..." />
+              </div>
+            </div>
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                  <div class="avatar avatar-online">
+                    <span class="avatar-initial rounded-circle bg-label-primary">A</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4">
+              <span class="text-muted fw-light">Payments /</span> Payment History
+            </h4>
+
+            <!-- Summary Cards -->
+            <div class="row mb-4">
+              <div class="col-md-3 col-6 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div class="card-info">
+                        <p class="card-text text-muted mb-1">Total Collected</p>
+                        <h4 class="mb-0 text-success" id="totalCollected">$0.00</h4>
+                      </div>
+                      <div class="avatar">
+                        <span class="avatar-initial rounded bg-label-success">
+                          <i class="bx bx-dollar bx-sm"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div class="card-info">
+                        <p class="card-text text-muted mb-1">This Month</p>
+                        <h4 class="mb-0" id="thisMonth">$0.00</h4>
+                      </div>
+                      <div class="avatar">
+                        <span class="avatar-initial rounded bg-label-primary">
+                          <i class="bx bx-calendar bx-sm"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div class="card-info">
+                        <p class="card-text text-muted mb-1">Total Payments</p>
+                        <h4 class="mb-0" id="totalPayments">0</h4>
+                      </div>
+                      <div class="avatar">
+                        <span class="avatar-initial rounded bg-label-info">
+                          <i class="bx bx-receipt bx-sm"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-6 mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <div class="card-info">
+                        <p class="card-text text-muted mb-1">Avg Payment</p>
+                        <h4 class="mb-0" id="avgPayment">$0.00</h4>
+                      </div>
+                      <div class="avatar">
+                        <span class="avatar-initial rounded bg-label-warning">
+                          <i class="bx bx-trending-up bx-sm"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" id="filterStatus">
+                      <option value="">All Status</option>
+                      <option value="paid">Paid</option>
+                      <option value="pending">Pending</option>
+                      <option value="overdue">Overdue</option>
+                      <option value="partial">Partial</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Payment Method</label>
+                    <select class="form-select" id="filterMethod">
+                      <option value="">All Methods</option>
+                      <option value="bank_transfer">Bank Transfer</option>
+                      <option value="cash">Cash</option>
+                      <option value="check">Check</option>
+                      <option value="credit_card">Credit Card</option>
+                      <option value="mobile_payment">Mobile Payment</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Date From</label>
+                    <input type="date" class="form-control" id="filterDateFrom" />
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Date To</label>
+                    <input type="date" class="form-control" id="filterDateTo" />
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-primary" id="applyFilters">
+                      <i class="bx bx-filter-alt me-1"></i> Apply Filters
+                    </button>
+                    <button class="btn btn-outline-secondary" id="resetFilters">
+                      <i class="bx bx-reset me-1"></i> Reset
+                    </button>
+                    <button class="btn btn-success" id="exportBtn">
+                      <i class="bx bx-download me-1"></i> Export to CSV
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Payment History</h5>
+                <span class="badge bg-label-primary" id="paymentCount">0 payments</span>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Receipt #</th>
+                        <th>Date</th>
+                        <th>Tenant</th>
+                        <th>Compartment</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                      <tr>
+                        <td colspan="9" class="text-center py-5">
+                          <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <p class="mt-2 text-muted">Loading payment history...</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+              <div class="mb-2 mb-md-0">
+                © <script>document.write(new Date().getFullYear());</script> RentMS - Rent Management System
+              </div>
+            </div>
+          </footer>
+          <div class="content-backdrop fade"></div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-overlay layout-menu-toggle"></div>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Payment Receipt</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="receiptContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="printReceiptBtn">
+            <i class="bx bx-printer me-1"></i> Print Receipt
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../assets/vendor/js/bootstrap.js"></script>
+  <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+    let allPayments = [];
+    let filteredPayments = [];
+
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    };
+
+    const formatDate = (dateString) => {
+      return new Date(dateString).toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    };
+
+    const getStatusBadge = (status, amount, expected) => {
+      const difference = amount - expected;
+      let statusText = 'Pending';
+      let badgeClass = 'bg-label-warning';
+
+      if (status === 'paid') {
+        if (difference > 0) {
+          statusText = 'Paid (Advance)';
+          badgeClass = 'bg-label-info';
+        } else if (difference < 0) {
+          statusText = 'Partial';
+          badgeClass = 'bg-label-secondary';
+        } else {
+          statusText = 'Paid';
+          badgeClass = 'bg-label-info';
+        }
+      } else if (status === 'overdue') {
+        statusText = 'Overdue';
+        badgeClass = 'bg-label-danger';
+      }
+
+      return `<span class="badge ${badgeClass}">${statusText}</span>`;
+    };
+
+    const getMethodBadge = (method) => {
+      const methods = {
+        'bank_transfer': '<span class="badge bg-label-primary"><i class="bx bx-transfer"></i> Bank Transfer</span>',
+        'cash': '<span class="badge bg-label-success"><i class="bx bx-money"></i> Cash</span>',
+        'check': '<span class="badge bg-label-info"><i class="bx bx-file"></i> Check</span>',
+        'credit_card': '<span class="badge bg-label-warning"><i class="bx bx-credit-card"></i> Card</span>',
+        'mobile_payment': '<span class="badge bg-label-secondary"><i class="bx bx-mobile"></i> Mobile</span>'
+      };
+      return methods[method] || '<span class="badge bg-label-secondary">Other</span>';
+    };
+
+    const generateReceipt = (payment) => {
+      const tenant = payment.tenant || {};
+      const receiptNumber = `RCP-${payment._id.toString().slice(-8).toUpperCase()}`;
+      const date = formatDate(payment.paidDate || payment.createdAt);
+      const amount = payment.amount;
+      const expected = tenant.rentAmount || payment.amount;
+      const difference = amount - expected;
+      
+      // Get compartment number
+      let compartmentNumber = 'N/A';
+      if (payment.compartment && typeof payment.compartment === 'object') {
+        compartmentNumber = payment.compartment.compartmentNumber || payment.compartment.name || 'N/A';
+      } else if (payment.compartmentNumber) {
+        compartmentNumber = payment.compartmentNumber;
+      } else if (tenant.compartmentNumber) {
+        compartmentNumber = tenant.compartmentNumber;
+      }
+      
+      let analysis = '';
+      let analysisColor = '';
+      if (difference > 0) {
+        analysis = `Paid in Advance: ${formatCurrency(difference)} will be credited to next month`;
+        analysisColor = '#28a745';
+      } else if (difference < 0) {
+        analysis = `Partial Payment: ${formatCurrency(Math.abs(difference))} still due`;
+        analysisColor = '#ff9800';
+      } else {
+        analysis = `Full Payment Received - Rent Paid in Full`;
+        analysisColor = '#28a745';
+      }
+
+      const tenantName = tenant.firstName && tenant.lastName 
+        ? `${tenant.firstName} ${tenant.lastName}` 
+        : tenant.name || 'N/A';
+
+      return `
+        <div style="font-family: Arial; max-width: 800px; margin: 0 auto; border: 2px solid #333; padding: 30px;">
+          <div style="text-align: center; border-bottom: 3px solid #333; padding-bottom: 20px; margin-bottom: 30px;">
+            <h1 style="margin: 0; font-size: 32px;">PAYMENT RECEIPT</h1>
+            <p style="margin: 5px 0; color: #666;">Rent Management System</p>
+          </div>
+          
+          <div style="background: #f5f5f5; padding: 10px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 20px; border-left: 4px solid #696cff;">
+            Receipt No: ${receiptNumber}
+          </div>
+
+          <table style="width: 100%; margin-bottom: 25px; border-collapse: collapse;">
+            <tr><td style="padding: 8px; font-weight: bold; width: 180px;">Date of Payment:</td><td style="padding: 8px;">${date}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Tenant Name:</td><td style="padding: 8px;">${tenantName}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Email:</td><td style="padding: 8px;">${tenant.email || 'N/A'}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Phone:</td><td style="padding: 8px;">${tenant.phone || 'N/A'}</td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Compartment:</td><td style="padding: 8px;"><strong>${compartmentNumber}</strong></td></tr>
+            <tr><td style="padding: 8px; font-weight: bold;">Payment Method:</td><td style="padding: 8px;">${payment.paymentMethod || 'Bank Transfer'}</td></tr>
+          </table>
+
+          <div style="background: #f9f9f9; border: 2px solid #ddd; padding: 25px; text-align: center; margin: 25px 0;">
+            <div style="display: flex; justify-content: space-between; padding: 10px 20px; background: white; border-radius: 5px; margin: 10px 0;">
+              <span style="color: #666;">Expected Amount</span>
+              <span style="font-size: 24px; font-weight: bold; color: #666;">${formatCurrency(expected)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px 20px; background: white; border-radius: 5px;">
+              <span style="color: #666;">Amount Paid</span>
+              <span style="font-size: 24px; font-weight: bold; color: #28a745;">${formatCurrency(amount)}</span>
+            </div>
+          </div>
+
+          <div style="background: linear-gradient(135deg, #f5f5f5 0%, #e9ecef 100%); border-left: 5px solid ${analysisColor}; padding: 20px; border-radius: 5px; margin: 25px 0;">
+            <strong style="display: block; font-size: 18px; color: ${analysisColor}; margin-bottom: 5px;">Payment Status:</strong>
+            <p style="margin: 5px 0; font-size: 16px;">${analysis}</p>
+          </div>
+
+          <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 5px; margin-top: 25px;">
+            <p style="font-size: 18px; margin: 0;">Status: <strong style="color: #28a745;">PAID ✓</strong></p>
+            <p style="margin-top: 10px; color: #666; font-size: 14px;">This is a computer-generated receipt and serves as official proof of payment.</p>
+          </div>
+
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; color: #999; font-size: 12px;">
+            <p>Thank you for your payment</p>
+            <p>© ${new Date().getFullYear()} RentMS - Rent Management System</p>
+          </div>
+        </div>
+      `;
+    };
+
+    const loadPayments = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/payments?limit=500`);
+        if (!response.ok) throw new Error('Failed to fetch payments');
+        
+        const data = await response.json();
+        allPayments = data.data || [];
+        filteredPayments = [...allPayments];
+        
+        renderPayments();
+        updateSummary();
+      } catch (error) {
+        console.error('Error loading payments:', error);
+        document.getElementById('paymentsTableBody').innerHTML = `
+          <tr>
+            <td colspan="9" class="text-center py-5 text-danger">
+              <i class="bx bx-error-circle bx-lg mb-2"></i>
+              <p>Failed to load payments. Please try again.</p>
+            </td>
+          </tr>
+        `;
+      }
+    };
+
+    const renderPayments = () => {
+      const tbody = document.getElementById('paymentsTableBody');
+      
+      if (filteredPayments.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="text-center py-5">
+              <i class="bx bx-receipt bx-lg text-muted mb-2"></i>
+              <p class="text-muted mb-0">No payments found</p>
+            </td>
+          </tr>
+        `;
+        document.getElementById('paymentCount').textContent = '0 payments';
+        return;
+      }
+
+      tbody.innerHTML = filteredPayments.map(payment => {
+        const tenant = payment.tenant || {};
+        const tenantName = tenant.firstName && tenant.lastName 
+          ? `${tenant.firstName} ${tenant.lastName}` 
+          : tenant.name || 'Unknown';
+        const receiptNumber = `RCP-${payment._id.toString().slice(-8).toUpperCase()}`;
+        
+        // Get compartment number from various possible sources
+        let compartmentNumber = 'N/A';
+        if (payment.compartment && typeof payment.compartment === 'object') {
+          compartmentNumber = payment.compartment.compartmentNumber || payment.compartment.name || 'N/A';
+        } else if (payment.compartmentNumber) {
+          compartmentNumber = payment.compartmentNumber;
+        } else if (tenant.compartmentNumber) {
+          compartmentNumber = tenant.compartmentNumber;
+        }
+        
+        const expectedAmount = tenant.rentAmount || payment.amount;
+
+        return `
+          <tr>
+            <td><strong>${receiptNumber}</strong></td>
+            <td>${formatDate(payment.paidDate || payment.createdAt)}</td>
+            <td>
+              <div>${tenantName}</div>
+              <small class="text-muted">${tenant.email || ''}</small>
+            </td>
+            <td>${compartmentNumber}</td>
+            <td><strong class="text-success">${formatCurrency(payment.amount)}</strong></td>
+            <td>${getMethodBadge(payment.paymentMethod)}</td>
+            <td><span class="badge bg-label-secondary text-capitalize">${payment.type || 'rent'}</span></td>
+            <td>${getStatusBadge(payment.status, payment.amount, expectedAmount)}</td>
+            <td>
+              <button class="btn btn-sm btn-info" onclick="viewReceipt('${payment._id}')">
+                <i class="bx bx-receipt"></i> View
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('paymentCount').textContent = `${filteredPayments.length} payment${filteredPayments.length !== 1 ? 's' : ''}`;
+    };
+
+    const updateSummary = () => {
+      const total = filteredPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+      const thisMonth = filteredPayments.filter(p => {
+        const paymentDate = new Date(p.paidDate || p.createdAt);
+        const now = new Date();
+        return paymentDate.getMonth() === now.getMonth() && paymentDate.getFullYear() === now.getFullYear();
+      }).reduce((sum, p) => sum + (p.amount || 0), 0);
+      const avg = filteredPayments.length > 0 ? total / filteredPayments.length : 0;
+
+      document.getElementById('totalCollected').textContent = formatCurrency(total);
+      document.getElementById('thisMonth').textContent = formatCurrency(thisMonth);
+      document.getElementById('totalPayments').textContent = filteredPayments.length;
+      document.getElementById('avgPayment').textContent = formatCurrency(avg);
+    };
+
+    const applyFilters = () => {
+      const status = document.getElementById('filterStatus').value;
+      const method = document.getElementById('filterMethod').value;
+      const dateFrom = document.getElementById('filterDateFrom').value;
+      const dateTo = document.getElementById('filterDateTo').value;
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+      filteredPayments = allPayments.filter(payment => {
+        const tenant = payment.tenant || {};
+        const tenantName = `${tenant.firstName || ''} ${tenant.lastName || ''}`.toLowerCase();
+        const paymentDate = new Date(payment.paidDate || payment.createdAt);
+
+        if (status && payment.status !== status) return false;
+        if (method && payment.paymentMethod !== method) return false;
+        if (dateFrom && paymentDate < new Date(dateFrom)) return false;
+        if (dateTo && paymentDate > new Date(dateTo)) return false;
+        if (searchTerm && !tenantName.includes(searchTerm) && !(payment.compartmentNumber || '').toLowerCase().includes(searchTerm)) return false;
+
+        return true;
+      });
+
+      renderPayments();
+      updateSummary();
+    };
+
+    const resetFilters = () => {
+      document.getElementById('filterStatus').value = '';
+      document.getElementById('filterMethod').value = '';
+      document.getElementById('filterDateFrom').value = '';
+      document.getElementById('filterDateTo').value = '';
+      document.getElementById('searchInput').value = '';
+      
+      filteredPayments = [...allPayments];
+      renderPayments();
+      updateSummary();
+    };
+
+    const viewReceipt = (paymentId) => {
+      const payment = allPayments.find(p => p._id === paymentId);
+      if (!payment) return;
+
+      const receiptContent = generateReceipt(payment);
+      document.getElementById('receiptContent').innerHTML = receiptContent;
+      
+      const modal = new bootstrap.Modal(document.getElementById('receiptModal'));
+      modal.show();
+    };
+
+    const exportToCSV = () => {
+      const headers = ['Receipt #', 'Date', 'Tenant', 'Compartment', 'Amount', 'Method', 'Type', 'Status'];
+      const rows = filteredPayments.map(payment => {
+        const tenant = payment.tenant || {};
+        const tenantName = `${tenant.firstName || ''} ${tenant.lastName || ''}`.trim() || 'Unknown';
+        return [
+          `RCP-${payment._id.toString().slice(-8).toUpperCase()}`,
+          formatDate(payment.paidDate || payment.createdAt),
+          tenantName,
+          payment.compartmentNumber || 'N/A',
+          payment.amount,
+          payment.paymentMethod || 'N/A',
+          payment.type || 'rent',
+          payment.status || 'pending'
+        ];
+      });
+
+      const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `payment-history-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    };
+
+    document.getElementById('applyFilters').addEventListener('click', applyFilters);
+    document.getElementById('resetFilters').addEventListener('click', resetFilters);
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+    document.getElementById('printReceiptBtn').addEventListener('click', () => {
+      const content = document.getElementById('receiptContent').innerHTML;
+      const printWindow = window.open('', '', 'width=800,height=600');
+      printWindow.document.write(content);
+      printWindow.document.close();
+      printWindow.print();
+    });
+
+    loadPayments();
+  </script>
+  
+  <!-- System Status Widget -->
+  <script>
+    fetch('system-status-widget.html')
+      .then(response => response.text())
+      .then(html => {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        document.body.appendChild(div);
+      });
+  </script>
+</body>
+</html>

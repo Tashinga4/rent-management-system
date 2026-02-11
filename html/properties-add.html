@@ -3,15 +3,15 @@
   lang="en"
   class="light-style layout-menu-fixed"
   dir="ltr"
-  data-theme="theme-default"
+ 
   data-assets-path="../assets/"
   data-template="vertical-menu-template-free"
 >
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    <title>Add Property - Company Flat Rent Management System</title>
-    <meta name="description" content="Add new property to the system" />
+    <title>Add Apartment - Company Flat Rent Management System</title>
+    <meta name="description" content="Add new Apartment to the system" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
@@ -96,17 +96,17 @@
             <li class="menu-item active open">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-building-house"></i>
-                <div>Properties</div>
+                <div>Apartments</div>
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="properties-list.html" class="menu-link">
-                    <div>All Properties</div>
+                  <a href="Apartments-list.html" class="menu-link">
+                    <div>All Apartments</div>
                   </a>
                 </li>
                 <li class="menu-item active">
-                  <a href="properties-add.html" class="menu-link">
-                    <div>Add Property</div>
+                  <a href="Apartments-add.html" class="menu-link">
+                    <div>Add Apartment</div>
                   </a>
                 </li>
               </ul>
@@ -143,34 +143,23 @@
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
               <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Properties /</span> Add New Property
+                <span class="text-muted fw-light">Apartments /</span> Add New Apartment
               </h4>
 
-              <!-- Property Form -->
+              <!-- Apartment Form -->
               <div class="row">
                 <div class="col-xl-8">
                   <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                      <h5 class="mb-0">Property Information</h5>
+                      <h5 class="mb-0">Apartment Information</h5>
                       <small class="text-muted float-end">Fill in all details</small>
                     </div>
                     <div class="card-body">
                       <form id="propertyForm">
                         <div class="mb-3">
-                          <label class="form-label" for="flatName">Property Name</label>
+                          <label class="form-label" for="flatName">Apartment Name</label>
                           <input type="text" class="form-control" id="flatName" placeholder="e.g., Building A" required />
-                          <small class="text-muted">The name of the property or building</small>
-                        </div>
-
-                        <div class="mb-3">
-                          <label class="form-label" for="propertyType">Property Type</label>
-                          <select class="form-select" id="propertyType" required>
-                            <option value="">Select type</option>
-                            <option value="Residential">Residential Building</option>
-                            <option value="Apartment">Apartment Complex</option>
-                            <option value="House">Single House</option>
-                            <option value="Commercial">Commercial Property</option>
-                          </select>
+                          <small class="text-muted">The name of the Apartment or building</small>
                         </div>
 
                         <div class="mb-3">
@@ -180,21 +169,21 @@
 
                         <div class="mb-3">
                           <label class="form-label" for="description">Description (Optional)</label>
-                          <textarea class="form-control" id="description" rows="3" placeholder="Additional details about the property..."></textarea>
+                          <textarea class="form-control" id="description" rows="3" placeholder="Additional details about the Apartment..."></textarea>
                         </div>
 
                         <div class="alert alert-info" role="alert">
-                          <i class="bx bx-info-circle"></i> After creating the property, you can add suites and rooms from the Suites management page.
+                          <i class="bx bx-info-circle"></i> After creating the Apartment, you can manage compartments from the Tenants page.
                         </div>
 
                         <button type="submit" class="btn btn-primary">
-                          <i class="bx bx-save me-1"></i> Save Property
+                          <i class="bx bx-save me-1"></i> Save Apartment
                         </button>
-                        <a href="properties-list.html" class="btn btn-outline-secondary ms-2">
+                        <a href="Apartments-list.html" class="btn btn-outline-secondary ms-2">
                           <i class="bx bx-x me-1"></i> Cancel
                         </a>
                         <a href="suites-list.html" class="btn btn-outline-info ms-2">
-                          <i class="bx bx-building-house me-1"></i> Manage Suites
+                          <i class="bx bx-building-house me-1"></i> Manage Compartments
                         </a>
                       </form>
                     </div>
@@ -207,21 +196,21 @@
                       <h5 class="card-title">Quick Tips</h5>
                       <ul class="list-unstyled">
                         <li class="mb-2">
-                          <i class="bx bx-check text-success"></i> Properties are buildings or complexes
+                          <i class="bx bx-check text-success"></i> Apartments are buildings or complexes
                         </li>
                         <li class="mb-2">
-                          <i class="bx bx-check text-success"></i> Add suites after creating the property
+                          <i class="bx bx-check text-success"></i> Add compartments after creating the Apartment
                         </li>
                         <li class="mb-2">
-                          <i class="bx bx-check text-success"></i> Each suite can have multiple rooms
+                          <i class="bx bx-check text-success"></i> Each compartment is identified by its number
                         </li>
                         <li class="mb-2">
-                          <i class="bx bx-check text-success"></i> Tenants live in suites, not properties
+                          <i class="bx bx-check text-success"></i> Tenants are linked by compartment number
                         </li>
                       </ul>
                       <div class="mt-3 p-3 bg-label-info rounded">
                         <small><strong>Structure:</strong><br>
-                        Property → Suites → Rooms → Tenant</small>
+                        Apartment → Suites → Rooms → Tenant</small>
                       </div>
                     </div>
                   </div>
@@ -265,7 +254,7 @@
     <!-- API Service -->
     <script src="../assets/js/api-service.js"></script>
 
-    <!-- Property Form Handler -->
+    <!-- Apartment Form Handler -->
     <script>
       document.getElementById('propertyForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -273,7 +262,6 @@
         // Get form values
         const propertyData = {
           name: document.getElementById('flatName').value,
-          type: document.getElementById('propertyType').value,
           address: document.getElementById('address').value,
           description: document.getElementById('description').value,
           status: 'active',
@@ -296,22 +284,22 @@
 
           if (response.success) {
             // Show success message
-            alert('Property added successfully!');
+            alert('Apartment added successfully!');
             
-            // Redirect to dashboard or properties list
+            // Redirect to dashboard or Apartments list
             window.location.href = 'index.html';
           } else {
-            alert('Error: ' + (response.message || 'Failed to add property'));
+            alert('Error: ' + (response.message || 'Failed to add Apartment'));
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="bx bx-save me-1"></i> Save Property';
+            submitBtn.innerHTML = '<i class="bx bx-save me-1"></i> Save Apartment';
           }
         } catch (error) {
-          console.error('Error adding property:', error);
-          alert('Failed to add property. Please make sure the backend server is running.');
+          console.error('Error adding Apartment:', error);
+          alert('Failed to add Apartment. Please make sure the backend server is running.');
           
           const submitBtn = e.target.querySelector('button[type="submit"]');
           submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="bx bx-save me-1"></i> Save Property';
+          submitBtn.innerHTML = '<i class="bx bx-save me-1"></i> Save Apartment';
         }
       });
     </script>

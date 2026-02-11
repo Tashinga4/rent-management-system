@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="../assets/css/demo.css" />
   <script src="../assets/vendor/js/helpers.js"></script>
   <script src="../assets/js/config.js"></script>
+
+  <!-- Authentication Helper -->
+  <script src="../assets/js/auth.js"></script>
 </head>
 <body>
   <div class="layout-wrapper layout-content-navbar">
@@ -31,27 +34,10 @@
             </a>
           </li>
           <li class="menu-item active">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="tenants-list.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-user"></i>
               <div>Tenants</div>
             </a>
-            <ul class="menu-sub">
-              <li class="menu-item">
-                <a href="tenants-list.html" class="menu-link">
-                  <div>All Tenants</div>
-                </a>
-              </li>
-              <li class="menu-item">
-                <a href="tenants-add.html" class="menu-link">
-                  <div>Add Tenant</div>
-                </a>
-              </li>
-              <li class="menu-item active">
-                <a href="tenants-import.html" class="menu-link">
-                  <div>Bulk Import</div>
-                </a>
-              </li>
-            </ul>
           </li>
         </ul>
       </aside>
@@ -77,9 +63,9 @@
                       <h6 class="alert-heading"><i class="bx bx-info-circle"></i> How it works</h6>
                       <ol class="mb-0">
                         <li>Download the template file below</li>
-                        <li>Fill in your tenant data (Name, Email, Phone, Property, Rent, etc.)</li>
+                        <li>Fill in your tenant data (Name, Email, Phone, Compartment Number, Rent, etc.)</li>
                         <li>Upload the completed Excel file</li>
-                        <li>System automatically creates properties, suites, rooms and assigns tenants</li>
+                        <li>System assigns tenants by compartment number</li>
                       </ol>
                     </div>
 
@@ -136,7 +122,7 @@
                       <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Name</strong> - Tenant full name (required)</li>
                       <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Email</strong> - Email address</li>
                       <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Phone</strong> - Phone number</li>
-                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Property</strong> - Building/property name</li>
+                      <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Apartment</strong> - Building/Apartment name</li>
                       <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Rent</strong> - Monthly rent amount (required)</li>
                       <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Move In Date</strong> - Format: YYYY-MM-DD</li>
                       <li class="mb-2"><i class="bx bx-check text-success"></i> <strong>Lease End Date</strong></li>
@@ -150,10 +136,10 @@
                   <div class="card-body">
                     <h6 class="card-title">Auto-Assignment Features</h6>
                     <ul class="list-unstyled">
-                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Properties created automatically</li>
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Apartments created automatically</li>
                       <li class="mb-2"><i class="bx bx-star text-warning"></i> Suites assigned by rent amount</li>
                       <li class="mb-2"><i class="bx bx-star text-warning"></i> Rooms created in each suite</li>
-                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Tenants with same rent share property</li>
+                      <li class="mb-2"><i class="bx bx-star text-warning"></i> Tenants with same rent share Apartment</li>
                       <li class="mb-2"><i class="bx bx-star text-warning"></i> Suite numbers auto-generated</li>
                     </ul>
                   </div>
@@ -236,7 +222,6 @@
                 <p class="mb-2">${result.message}</p>
                 <hr>
                 <ul class="mb-0">
-                  <li><strong>Properties Created:</strong> ${result.result.propertiesCreated}</li>
                   <li><strong>Tenants Imported:</strong> ${result.result.tenantsCreated}</li>
                   <li><strong>Payments Created:</strong> ${result.result.paymentsCreated}</li>
                 </ul>

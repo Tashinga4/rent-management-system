@@ -103,6 +103,44 @@ let menu, animate;
   // Speech To Text
   window.Helpers.initSpeechToText();
 
+  // Remove Apartments menu and add Compartments entry
+  const setupCompartmentsMenu = () => {
+    const menuInner = document.querySelector('.menu-inner');
+    if (!menuInner) return;
+
+    menuInner.querySelectorAll('.menu-item').forEach((item) => {
+      const text = (item.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text.includes('Apartments')) {
+        item.remove();
+      }
+    });
+
+    const existing = menuInner.querySelector('a[href="compartments.html"]');
+    if (existing) return;
+
+    const dashboardItem = menuInner.querySelector('a[href="index.html"]')?.closest('.menu-item');
+    const li = document.createElement('li');
+    li.className = 'menu-item';
+    li.innerHTML = `
+      <a href="compartments.html" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-grid"></i>
+        <div data-i18n="Compartments">Compartments</div>
+      </a>
+    `;
+
+    if (dashboardItem && dashboardItem.nextSibling) {
+      dashboardItem.parentNode.insertBefore(li, dashboardItem.nextSibling);
+    } else {
+      menuInner.appendChild(li);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupCompartmentsMenu);
+  } else {
+    setupCompartmentsMenu();
+  }
+
   // Manage menu expanded/collapsed with templateCustomizer & local storage
   //------------------------------------------------------------------
 

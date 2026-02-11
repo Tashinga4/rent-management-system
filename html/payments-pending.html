@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
   <script src="../assets/vendor/js/helpers.js"></script>
   <script src="../assets/js/config.js"></script>
+
+  <!-- Authentication Helper -->
+  <script src="../assets/js/auth.js"></script>
 </head>
 
 <body>
@@ -55,24 +58,10 @@
             </a>
           </li>
           <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons bx bx-building-house"></i>
-              <div>Properties</div>
-            </a>
-            <ul class="menu-sub">
-              <li class="menu-item"><a href="properties-list.html" class="menu-link"><div>All Properties</div></a></li>
-              <li class="menu-item"><a href="properties-add.html" class="menu-link"><div>Add Property</div></a></li>
-            </ul>
-          </li>
-          <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="tenants-list.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-group"></i>
               <div>Tenants</div>
             </a>
-            <ul class="menu-sub">
-              <li class="menu-item"><a href="tenants-list.html" class="menu-link"><div>All Tenants</div></a></li>
-              <li class="menu-item"><a href="tenants-add.html" class="menu-link"><div>Add Tenant</div></a></li>
-            </ul>
           </li>
           <li class="menu-item active open">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -120,7 +109,7 @@
                   </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="auth-login-basic.html"><i class="bx bx-power-off me-2"></i><span>Log Out</span></a></li>
+                  <li><a class="dropdown-item" href="#" data-logout><i class="bx bx-power-off me-2"></i><span>Log Out</span></a></li>
                 </ul>
               </li>
             </ul>
@@ -149,7 +138,7 @@
                     <thead>
                       <tr>
                         <th>Tenant</th>
-                        <th>Property</th>
+                        <th>Compartment</th>
                         <th>Amount</th>
                         <th>Due Date</th>
                         <th>Days Pending</th>

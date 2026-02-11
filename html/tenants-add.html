@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
   <script src="../assets/vendor/js/helpers.js"></script>
   <script src="../assets/js/config.js"></script>
+
+  <!-- Authentication Helper -->
+  <script src="../assets/js/auth.js"></script>
 </head>
 
 <body>
@@ -39,9 +42,9 @@
             </a>
           </li>
           <li class="menu-item">
-            <a href="properties-list.html" class="menu-link">
+            <a href="Apartments-list.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-building"></i>
-              <div>Properties</div>
+              <div>Apartments</div>
             </a>
           </li>
           <li class="menu-item active">
@@ -92,24 +95,50 @@
 
                       <div class="row">
                         <div class="col-md-6 mb-3">
-                          <label class="form-label" for="email">Email</label>
-                          <input type="email" class="form-control" id="email" placeholder="john@example.com" />
+                          <label class="form-label" for="email">Email *</label>
+                          <input type="email" class="form-control" id="email" placeholder="john@example.com" required />
                         </div>
                         <div class="col-md-6 mb-3">
-                          <label class="form-label" for="phone">Phone Number</label>
-                          <input type="tel" class="form-control" id="phone" placeholder="+1234567890" />
+                          <label class="form-label" for="phone">Phone Number *</label>
+                          <input type="tel" class="form-control" id="phone" placeholder="+1234567890" required />
                         </div>
                       </div>
 
-                      <div class="mb-3">
-                        <label class="form-label" for="rent">Monthly Rent Amount ($) *</label>
-                        <input type="number" class="form-control" id="rent" placeholder="350.00" min="0" step="0.01" required />
-                        <small class="text-muted">System will auto-assign you to an available suite matching this rent</small>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label" for="compartmentNumber">Compartment Number</label>
+                          <input type="text" class="form-control" id="compartmentNumber" placeholder="e.g. 12" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" id="autoAssignCompartment" checked />
+                            <label class="form-check-label" for="autoAssignCompartment">
+                              Auto-assign to next available room (FCFS)
+                            </label>
+                          </div>
+                          <small class="text-muted d-block mt-1">If checked, tenant will be automatically assigned to the first vacant compartment</small>
+                        </div>
                       </div>
 
-                      <div class="alert alert-info" role="alert" id="suitePreview" style="display: none;">
-                        <h6 class="alert-heading"><i class="bx bx-info-circle"></i> Suite Assignment Preview</h6>
-                        <p class="mb-0" id="suitePreviewText">Enter rent amount to see available suites...</p>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <label class="form-label">Monthly Rent Amount</label>
+                          <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" value="350.00" readonly>
+                            <span class="input-group-text">/month</span>
+                          </div>
+                          <small class="text-muted d-block mt-1">Fixed rent for all compartments</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" id="rentPaid" checked>
+                            <label class="form-check-label" for="rentPaid">
+                              <strong>Mark Rent as Paid on Move-In</strong>
+                            </label>
+                          </div>
+                          <small class="text-muted d-block mt-1">System will record initial $350 payment</small>
+                        </div>
                       </div>
 
                       <div class="row">
@@ -117,20 +146,6 @@
                           <label class="form-label" for="moveInDate">Move-In Date *</label>
                           <input type="date" class="form-control" id="moveInDate" required />
                         </div>
-                        <div class="col-md-6 mb-3">
-                          <label class="form-label" for="leaseEndDate">Lease End Date</label>
-                          <input type="date" class="form-control" id="leaseEndDate" />
-                        </div>
-                      </div>
-
-                      <div class="mb-3">
-                        <label class="form-label" for="emergencyContact">Emergency Contact</label>
-                        <input type="text" class="form-control" id="emergencyContact" placeholder="Name & Phone" />
-                      </div>
-
-                      <div class="mb-3">
-                        <label class="form-label" for="notes">Notes</label>
-                        <textarea class="form-control" id="notes" rows="3" placeholder="Additional information..."></textarea>
                       </div>
 
                       <button type="submit" class="btn btn-primary">
@@ -197,6 +212,17 @@
     let allRooms = [];
     let allProperties = [];
     
+    function applyCompartmentFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const compartment = params.get('compartment');
+      if (!compartment) return;
+      const compartmentInput = document.getElementById('compartmentNumber');
+      if (!compartmentInput) return;
+      compartmentInput.value = compartment;
+      compartmentInput.readOnly = true;
+      compartmentInput.classList.add('bg-light');
+    }
+
     async function loadData() {
       try {
         const [propsResponse, suitesResponse, roomsResponse] = await Promise.all([
@@ -209,117 +235,113 @@
         allSuites = suitesResponse.data || suitesResponse || [];
         allRooms = roomsResponse.data || roomsResponse || [];
         
-        // Setup rent input listener for preview
-        document.getElementById('rent').addEventListener('input', function() {
-          previewSuiteAssignment(parseFloat(this.value));
-        });
+        applyCompartmentFromQuery();
       } catch (error) {
         console.error('Error loading data:', error);
       }
     }
 
-    function previewSuiteAssignment(rentAmount) {
-      const preview = document.getElementById('suitePreview');
-      const previewText = document.getElementById('suitePreviewText');
-      
-      if (!rentAmount || rentAmount <= 0) {
-        preview.style.display = 'none';
-        return;
-      }
-      
-      // Find available suites matching the rent
-      const matchingSuites = allSuites.filter(s => 
-        s.status === 'vacant' && parseFloat(s.rentAmount) === rentAmount
-      );
-      
-      if (matchingSuites.length === 0) {
-        preview.style.display = 'block';
-        preview.className = 'alert alert-warning';
-        previewText.innerHTML = `⚠️ No vacant suites available for $${rentAmount.toFixed(2)}/month. Please contact management.`;
+    // Toggle compartment number field based on auto-assign checkbox
+    document.getElementById('autoAssignCompartment').addEventListener('change', function() {
+      const compartmentInput = document.getElementById('compartmentNumber');
+      if (this.checked) {
+        compartmentInput.disabled = true;
+        compartmentInput.value = '';
+        compartmentInput.placeholder = 'Will be auto-assigned...';
       } else {
-        const suite = matchingSuites[0]; // Get first available
-        const property = allProperties.find(p => p._id === suite.propertyId);
-        const propertyName = property ? property.name : 'Unknown';
-        const suiteRooms = allRooms.filter(r => r.suiteId === suite._id);
-        
-        preview.style.display = 'block';
-        preview.className = 'alert alert-success';
-        previewText.innerHTML = `
-          ✓ You will be assigned to: <strong>${suite.suiteNumber}</strong><br>
-          📍 Property: ${propertyName}<br>
-          🚪 Rooms: ${suite.totalRooms} room(s) ${suiteRooms.length > 0 ? `(${suiteRooms.length} configured)` : ''}<br>
-          💰 Rent: $${suite.rentAmount}/month
-        `;
+        compartmentInput.disabled = false;
+        compartmentInput.placeholder = 'e.g. 12';
       }
-    }
-
-    function findAvailableSuite(rentAmount) {
-      // Find first vacant suite matching the rent amount
-      return allSuites.find(s => 
-        s.status === 'vacant' && parseFloat(s.rentAmount) === rentAmount
-      );
-    }
-
-    async function assignRoomInSuite(suiteId) {
-      // Find available room in the suite
-      const suiteRooms = allRooms.filter(r => r.suiteId === suiteId);
-      
-      // For now, return the first room or null
-      // In future, this could be more sophisticated (assign smallest room, etc.)
-      return suiteRooms.length > 0 ? suiteRooms[0]._id : null;
-    }
+    });
+    
+    // Initialize the field state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const autoAssignCheckbox = document.getElementById('autoAssignCompartment');
+      const compartmentInput = document.getElementById('compartmentNumber');
+      if (autoAssignCheckbox.checked) {
+        compartmentInput.disabled = true;
+        compartmentInput.placeholder = 'Will be auto-assigned...';
+      }
+    });
 
     document.getElementById('tenantForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const rentAmount = parseFloat(document.getElementById('rent').value);
-      
-      // Find available suite
-      const assignedSuite = findAvailableSuite(rentAmount);
-      
-      if (!assignedSuite) {
-        alert(`No vacant suites available for $${rentAmount.toFixed(2)}/month. Please contact management or choose a different rent amount.`);
+      const rentAmount = 350; // Fixed rent for all compartments
+      const rentPaid = document.getElementById('rentPaid').checked;
+      const fullName = document.getElementById('name').value;
+      const nameParts = fullName.split(/\s+/).filter(Boolean);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || 'Tenant';
+      const moveInDateValue = document.getElementById('moveInDate').value;
+      const leaseStart = moveInDateValue ? new Date(moveInDateValue) : null;
+      if (!leaseStart || Number.isNaN(leaseStart.getTime())) {
+        alert('Please provide a valid move-in date.');
         return;
       }
-
-      // Find available room in suite
-      const assignedRoomId = await assignRoomInSuite(assignedSuite._id);
+      
+      const autoAssign = document.getElementById('autoAssignCompartment').checked;
+      const compartmentNumberInput = document.getElementById('compartmentNumber').value.trim();
+      
+      // If auto-assign is NOT checked, compartment number is required
+      if (!autoAssign && !compartmentNumberInput) {
+        alert('Please enter a compartment number or check "Auto-assign to next available room".');
+        return;
+      }
+      
+      const leaseEnd = new Date(leaseStart);
+      leaseEnd.setFullYear(leaseEnd.getFullYear() + 1);
 
       const tenantData = {
-        name: document.getElementById('name').value,
+        firstName,
+        lastName,
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
-        suiteId: assignedSuite._id,
-        propertyId: assignedSuite.propertyId,
-        roomId: assignedRoomId,
-        moveInDate: document.getElementById('moveInDate').value,
-        leaseEndDate: document.getElementById('leaseEndDate').value,
-        rent: rentAmount,
-        emergencyContact: document.getElementById('emergencyContact').value,
-        notes: document.getElementById('notes').value,
-        paymentStatus: 'pending'
+        suiteId: null,
+        propertyId: null,
+        roomId: null,
+        leaseStart: leaseStart.toISOString(),
+        leaseEnd: leaseEnd.toISOString(),
+        rentAmount: rentAmount,
+        paymentStatus: 'pending',
+        initialRentPaid: rentPaid // Send the checkbox state to backend
       };
+      
+      // Only add compartmentNumber if manually specified (not auto-assigning)
+      if (!autoAssign && compartmentNumberInput) {
+        tenantData.compartmentNumber = compartmentNumberInput;
+      }
 
       try {
         const response = await api.createTenant(tenantData);
-        if (response.success) {
-          // Update suite status to occupied
-          await api.updateSuite(assignedSuite._id, { 
-            status: 'occupied', 
-            tenantId: response.data._id 
-          });
+        const isSuccess = response && (response.success === true || response.data || response._id);
+        if (isSuccess) {
+          // Check if tenant was auto-assigned
+          const assignedCompartment = response.compartment?.number || response.data?.compartmentNumber || compartmentNumberInput;
           
-          const property = allProperties.find(p => p._id === assignedSuite.propertyId);
-          const propertyName = property ? property.name : 'Unknown';
+          let successMessage = '✓ Tenant added successfully!';
+          if (response.autoAssigned) {
+            successMessage += `\n\n🎯 Auto-assigned to:\n• Compartment: ${assignedCompartment}\n• Rent: $${rentAmount.toFixed(2)}/month\n\n(First-Come-First-Serve basis)`;
+          } else if (assignedCompartment) {
+            successMessage += `\n\nAssigned to:\n• Compartment: ${assignedCompartment}\n• Rent: $${rentAmount.toFixed(2)}/month`;
+          }
           
-          alert(`✓ Tenant added successfully!\n\nAssigned to:\n• Property: ${propertyName}\n• Suite: ${assignedSuite.suiteNumber}\n• Rent: $${rentAmount.toFixed(2)}/month`);
-          window.location.href = 'tenants-list.html';
+          alert(successMessage);
+          
+          const params = new URLSearchParams(window.location.search);
+          const returnTarget = params.get('return');
+          if (returnTarget === 'compartments' && assignedCompartment) {
+            window.location.href = `compartments.html?assigned=${encodeURIComponent(assignedCompartment)}`;
+          } else {
+            window.location.href = 'tenants-list.html';
+          }
         } else {
-          alert('Error: ' + (response.error || 'Failed to add tenant'));
+          const errorMessage = response?.message || response?.error || 'Failed to add tenant';
+          alert('Error: ' + errorMessage);
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('Failed to add tenant. Please try again.');
+        alert('Failed to add tenant. Please try again. ' + (error?.message || ''));
       }
     });
 

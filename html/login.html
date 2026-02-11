@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  class="light-style customizer-hide"
+  dir="ltr"
+ 
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>Login - Company Flat Rent Management System</title>
+
+    <meta name="description" content="Company Flat Rent Management System - Login" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../assets/vendor/css/pages/page-auth.css" />
+
+    <!-- Helpers -->
+    <script src="../assets/vendor/js/helpers.js"></script>
+
+    <script src="../assets/js/config.js"></script>
+
+    <style>
+      .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .login-card {
+        width: 100%;
+        max-width: 420px;
+        padding: 2rem;
+        background: white;
+        border-radius: 0.375rem;
+        box-shadow: 0 2px 1rem rgba(161, 172, 184, 0.45);
+      }
+      .logo-section {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .logo-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1rem;
+        background: #696cff;
+        border-radius: 0.375rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+      }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #233446;
+        font-size: 0.875rem;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 0.375rem;
+        font-size: 0.9375rem;
+        transition: border-color 0.3s;
+      }
+      .form-group input:focus {
+        outline: none;
+        border-color: #696cff;
+        box-shadow: 0 0 0 3px rgba(105, 108, 255, 0.1);
+      }
+      .form-group input::placeholder {
+        color: #a7acb8;
+      }
+      .email-note {
+        background: #f0f2f5;
+        border-left: 4px solid #696cff;
+        padding: 0.875rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        color: #566a7f;
+      }
+      .email-note strong {
+        color: #233446;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      .btn-login {
+        width: 100%;
+        padding: 0.75rem;
+        background: #696cff;
+        color: white;
+        border: none;
+        border-radius: 0.375rem;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        cursor: pointer;
+        transition: background 0.3s;
+        margin-top: 1rem;
+      }
+      .btn-login:hover {
+        background: #5a5dd6;
+      }
+      .btn-login:active {
+        background: #4a4dc0;
+      }
+      .btn-login:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      .error-message {
+        color: #ff3e1d;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: none;
+      }
+      .error-message.show {
+        display: block;
+      }
+      .success-message {
+        color: #71dd37;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: none;
+      }
+      .success-message.show {
+        display: block;
+      }
+      .login-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.875rem;
+        color: #697a8d;
+      }
+      .divider {
+        text-align: center;
+        margin: 1.5rem 0;
+        font-size: 0.875rem;
+        color: #a7acb8;
+      }
+      .loading {
+        display: none;
+      }
+      .spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Login Container -->
+    <div class="login-container">
+      <div class="login-card">
+        <!-- Logo Section -->
+        <div class="logo-section">
+          <div class="logo-icon">
+            <i class="bx bx-buildings"></i>
+          </div>
+          <h2 style="margin: 0 0 0.5rem; color: #233446;">Rent Management</h2>
+          <p style="margin: 0; color: #697a8d; font-size: 0.875rem;">Company Flat System</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+          <div class="email-note">
+            <strong>📧 Email for Receipts</strong>
+            Enter the email address where you'll receive tenant payment receipts as PDFs.
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="your.email@company.com"
+              required
+              autofocus
+            />
+            <div class="error-message" id="emailError"></div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              required
+            />
+            <div class="error-message" id="passwordError"></div>
+          </div>
+
+          <!-- Remember Me -->
+          <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+            <input type="checkbox" id="rememberMe" name="rememberMe" style="width: 18px; height: 18px; cursor: pointer; margin-right: 0.5rem;" />
+            <label for="rememberMe" style="margin: 0; cursor: pointer; font-size: 0.875rem; font-weight: 400;">Remember me</label>
+          </div>
+
+          <!-- General Error Message -->
+          <div class="error-message show" id="generalError"></div>
+
+          <!-- Success Message -->
+          <div class="success-message" id="successMessage"></div>
+
+          <!-- Login Button -->
+          <button type="submit" class="btn-login" id="loginBtn">
+            <span id="buttonText">Sign In</span>
+            <span class="loading" id="buttonLoading">
+              <div class="spinner"></div>
+            </span>
+          </button>
+        </form>
+
+        <!-- Footer -->
+        <div class="login-footer">
+          <p style="margin: 1.5rem 0 0;">Having trouble logging in?</p>
+          <p style="margin: 0.5rem 0 0; color: #696cff; cursor: pointer; font-weight: 500;" onclick="alert('Contact your system administrator for password reset.')">Contact Support</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core JS -->
+    <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../assets/vendor/js/bootstrap.js"></script>
+    <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../assets/vendor/js/menu.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+    <!-- Login Script -->
+    <script>
+      /**
+       * LOGIN PAGE JAVASCRIPT
+       * Handles user authentication and form submission
+       */
+
+      // API endpoint for authentication requests
+      const API_URL = 'http://localhost:5000/api';
+
+      /**
+       * Check if user is already logged in
+       * If they have valid token and email in localStorage, redirect to dashboard
+       * This prevents already-authenticated users from seeing the login page
+       */
+      function checkAuth() {
+        // Retrieve stored authentication token from browser storage
+        const token = localStorage.getItem('authToken');
+        // Retrieve stored user email from browser storage
+        const userEmail = localStorage.getItem('userEmail');
+        
+        // If both token and email exist, user is authenticated
+        if (token && userEmail) {
+          // Redirect immediately to dashboard/index page
+          window.location.href = 'index.html';
+        }
+      }
+
+      /**
+       * Initialize authentication check when page loads
+       * Runs checkAuth function to validate if user is already logged in
+       */
+      document.addEventListener('DOMContentLoaded', checkAuth);
+
+      /**
+       * Handle login form submission
+       * Validates user input, sends credentials to server, stores tokens/data, and redirects
+       */
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // Prevent default form submission behavior (page reload)
+        e.preventDefault();
+
+        // Get email input value and trim whitespace
+        const email = document.getElementById('email').value.trim();
+        // Get password input value
+        const password = document.getElementById('password').value;
+        // Get remember me checkbox state
+        const rememberMe = document.getElementById('rememberMe').checked;
+
+        /**
+         * Clear all previous error messages from previous login attempts
+         * This ensures old errors don't confuse the user
+         */
+        document.getElementById('emailError').textContent = '';
+        document.getElementById('passwordError').textContent = '';
+        document.getElementById('generalError').innerHTML = '';
+        document.getElementById('generalError').classList.remove('show');
+        document.getElementById('successMessage').classList.remove('show');
+
+        /**
+         * Validate that both email and password are provided
+         * Show specific error messages for missing fields
+         */
+        if (!email || !password) {
+          // If email is empty, show email error message
+          if (!email) document.getElementById('emailError').textContent = 'Email is required';
+          // If password is empty, show password error message
+          if (!password) document.getElementById('passwordError').textContent = 'Password is required';
+          // Exit function if validation fails
+          return;
+        }
+
+        /**
+         * Show loading state on login button
+         * Disable button, hide text, and show spinner animation
+         */
+        const loginBtn = document.getElementById('loginBtn');
+        const buttonText = document.getElementById('buttonText');
+        const buttonLoading = document.getElementById('buttonLoading');
+        
+        // Disable button to prevent multiple submissions
+        loginBtn.disabled = true;
+        // Hide "Sign In" text
+        buttonText.style.display = 'none';
+        // Show loading spinner
+        buttonLoading.style.display = 'inline-block';
+
+        try {
+          /**
+           * Send login request to backend API
+           * POST request to /api/auth/login endpoint with credentials
+           */
+          const response = await fetch(`${API_URL}/auth/login`, {
+            // Use POST method for login
+            method: 'POST',
+            // Set content type to JSON
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            // Send email and password as JSON body
+            body: JSON.stringify({
+              email: email.toLowerCase(),
+              password: password
+            })
+          });
+
+          // Parse response as JSON
+          const data = await response.json();
+
+          /**
+           * Check if login was successful
+           * If success flag is true, store credentials and redirect
+           */
+          if (data.success) {
+            /**
+             * Store authentication token from server response
+             * This JWT token is required for API requests to protected endpoints
+             */
+            localStorage.setItem('authToken', data.data.token);
+            
+            /**
+             * Store user email for receipt delivery
+             * Used later by PDF service to send receipts to user
+             */
+            localStorage.setItem('userEmail', data.data.user.email);
+            
+            /**
+             * Store user ID for API calls
+             * Identifies which user is making requests
+             */
+            localStorage.setItem('userId', data.data.user.id);
+            
+            /**
+             * Store user role for permission checks
+             * Used to determine what features user can access (admin, manager, tenant)
+             */
+            localStorage.setItem('userRole', data.data.user.role);
+            
+            /**
+             * If user checked "Remember Me" checkbox
+             * Store their email locally for future reference
+             */
+            if (rememberMe) {
+              localStorage.setItem('rememberEmail', email);
+            }
+
+            /**
+             * Show success message to user
+             * Indicates that login was successful
+             */
+            document.getElementById('successMessage').textContent = '✓ Login successful! Redirecting...';
+            document.getElementById('successMessage').classList.add('show');
+
+            /**
+             * Redirect to dashboard after 1.5 second delay
+             * Gives user time to see success message before page change
+             */
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 1500);
+          } else {
+            /**
+             * If login failed, show error message from server
+             * Could be invalid email/password or other server error
+             */
+            document.getElementById('generalError').textContent = data.message || 'Login failed. Please try again.';
+            document.getElementById('generalError').classList.add('show');
+          }
+        } catch (error) {
+          /**
+           * Catch network errors or other exceptions
+           * Log error to console for debugging
+           */
+          console.error('Login error:', error);
+          /**
+           * Show network error message to user
+           * Instructs user to check connection and retry
+           */
+          document.getElementById('generalError').textContent = 'Network error. Please check your connection and try again.';
+          document.getElementById('generalError').classList.add('show');
+        } finally {
+          /**
+           * Reset button state after login attempt
+           * This runs whether login succeeded or failed
+           * Re-enable button and restore original text
+           */
+          loginBtn.disabled = false;
+          // Show "Sign In" text again
+          buttonText.style.display = 'inline';
+          // Hide loading spinner
+          buttonLoading.style.display = 'none';
+        }
+      });
+    </script>
+  </body>
+</html>

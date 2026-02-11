@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tenant Details - RentMS</title>
+  
+  <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+  <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+</head>
+
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo">
+          <a href="index.html" class="app-brand-link">
+            <span class="app-brand-logo demo">
+              <i class='bx bxs-building-house' style="font-size: 30px; color: #696cff;"></i>
+            </span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">RentMS</span>
+          </a>
+        </div>
+        <div class="menu-inner-shadow"></div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item">
+            <a href="index.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <div>Dashboard</div>
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a href="tenants-list.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-user"></i>
+              <div>Tenants</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="compartments.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-door-open"></i>
+              <div>Compartments</div>
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="layout-page">
+        <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme">
+          <div class="navbar-nav-right d-flex align-items-center">
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                  <div class="avatar avatar-online">
+                    <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold mb-0"><span class="text-muted fw-light">Tenants /</span> <span id="tenantName">Tenant Details</span></h4>
+              <a href="tenants-list.html" class="btn btn-outline-secondary">
+                <i class="bx bx-arrow-back me-1"></i> Back to List
+              </a>
+            </div>
+
+            <!-- Alert Messages -->
+            <div id="alertContainer"></div>
+
+            <div class="row">
+              <!-- Tenant Information Card -->
+              <div class="col-xl-8">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Tenant Information</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" readonly />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" readonly />
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" readonly />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="phone" readonly />
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label">Monthly Rent</label>
+                        <input type="text" class="form-control" id="rent" readonly />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label">Compartment</label>
+                        <input type="text" class="form-control" id="compartment" readonly />
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label">Move-In Date</label>
+                        <input type="date" class="form-control" id="moveInDate" readonly />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label">Lease End Date</label>
+                        <input type="date" class="form-control" id="leaseEnd" readonly />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Analysis Card -->
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Payment Analysis</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="row text-center mb-3">
+                      <div class="col-md-4">
+                        <div class="card bg-light">
+                          <div class="card-body">
+                            <h6 class="text-muted small mb-2">Total Payments</h6>
+                            <h4 id="totalPayments" class="mb-0">0</h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="card bg-light">
+                          <div class="card-body">
+                            <h6 class="text-muted small mb-2">On-Time Rate</h6>
+                            <h4 id="onTimeRate" class="mb-0">0%</h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="card bg-light">
+                          <div class="card-body">
+                            <h6 class="text-muted small mb-2">Current Balance</h6>
+                            <h4 id="currentBalance" class="mb-0">$0.00</h4>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="table-responsive">
+                      <table class="table table-sm table-hover">
+                        <thead>
+                          <tr>
+                            <th>Payment Date</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                          <tr>
+                            <td colspan="4" class="text-center text-muted">Loading payment history...</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommendation Card -->
+              <div class="col-xl-4">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h5 class="mb-0">Tenant Assessment</h5>
+                  </div>
+                  <div class="card-body">
+                    <div id="assessmentContainer">
+                      <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      Analyzing tenant...
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header bg-danger">
+                    <h5 class="mb-0 text-white">Danger Zone</h5>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-muted small mb-3">
+                      <i class="bx bx-info-circle me-1"></i> Terminating this tenant will remove them from their compartment and clear all assignments.
+                    </p>
+                    <button class="btn btn-danger w-100" id="terminateTenantBtn">
+                      <i class="bx bx-trash me-1"></i> Terminate Tenant
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl d-flex flex-wrap justify-content-between py-2">
+              <div class="mb-2 mb-md-0">
+                © <script>document.write(new Date().getFullYear());</script>, RentMS - Rent Management System
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminate Confirmation Modal -->
+  <div class="modal fade" id="terminateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title text-white">Terminate Tenant</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning mb-3">
+            <i class="bx bx-exclamation-circle me-2"></i>
+            <strong>Warning:</strong> This action cannot be undone.
+          </div>
+          <p>Are you sure you want to terminate <strong id="confirmTenantName"></strong>?</p>
+          <p class="text-muted small mb-0">This will:</p>
+          <ul class="text-muted small mt-2">
+            <li>Remove them from compartment <strong id="confirmCompartment"></strong></li>
+            <li>Mark them as terminated</li>
+            <li>Clear all payment records</li>
+            <li>Free up the compartment for a new tenant</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmTerminateBtn">Confirm Termination</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../assets/vendor/js/bootstrap.js"></script>
+  <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/api-service.js"></script>
+
+  <script>
+    const API_BASE = 'http://localhost:5000/api';
+    let currentTenant = null;
+    let payments = [];
+
+    const showAlert = (message, type = 'info') => {
+      const alertClass = type === 'error' ? 'alert-danger' 
+        : type === 'success' ? 'alert-success' 
+        : type === 'warning' ? 'alert-warning'
+        : 'alert-info';
+      
+      const container = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert ${alertClass} alert-dismissible fade show`;
+      alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      container.appendChild(alert);
+    };
+
+    const getTenantId = () => {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    };
+
+    const loadTenantDetails = async () => {
+      try {
+        const tenantId = getTenantId();
+        if (!tenantId) {
+          showAlert('No tenant ID provided', 'error');
+          return;
+        }
+
+        const response = await fetch(`${API_BASE}/tenants/${tenantId}`);
+        if (!response.ok) throw new Error('Failed to load tenant');
+
+        currentTenant = await response.json();
+        if (currentTenant.data) currentTenant = currentTenant.data;
+
+        displayTenantInfo();
+        await loadPaymentHistory();
+        analyzePayments();
+      } catch (error) {
+        console.error('Error loading tenant:', error);
+        showAlert('Failed to load tenant details: ' + error.message, 'error');
+      }
+    };
+
+    const displayTenantInfo = () => {
+      if (!currentTenant) return;
+
+      const firstName = currentTenant.firstName || '';
+      const lastName = currentTenant.lastName || '';
+      const fullName = `${firstName} ${lastName}`.trim();
+
+      document.getElementById('tenantName').textContent = fullName || 'Tenant Details';
+      document.getElementById('firstName').value = firstName;
+      document.getElementById('lastName').value = lastName;
+      document.getElementById('email').value = currentTenant.email || 'N/A';
+      document.getElementById('phone').value = currentTenant.phone || 'N/A';
+      document.getElementById('rent').value = `$${(currentTenant.rent || currentTenant.rentAmount || 0).toFixed(2)}`;
+      document.getElementById('compartment').value = currentTenant.compartmentNumber || 'Not Assigned';
+      
+      if (currentTenant.moveInDate) {
+        document.getElementById('moveInDate').value = new Date(currentTenant.moveInDate).toISOString().split('T')[0];
+      }
+      
+      if (currentTenant.leaseEnd) {
+        document.getElementById('leaseEnd').value = new Date(currentTenant.leaseEnd).toISOString().split('T')[0];
+      }
+
+      document.getElementById('confirmTenantName').textContent = fullName;
+      document.getElementById('confirmCompartment').textContent = currentTenant.compartmentNumber || 'N/A';
+    };
+
+    const loadPaymentHistory = async () => {
+      try {
+        const tenantId = getTenantId();
+        const response = await fetch(`${API_BASE}/payments?tenant=${tenantId}&limit=100`);
+        
+        let data = await response.json();
+        payments = Array.isArray(data) ? data : (data.data || []);
+
+        const tbody = document.getElementById('paymentsTableBody');
+        
+        if (payments.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No payments recorded</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = payments.map(payment => `
+          <tr>
+            <td>${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : 'N/A'}</td>
+            <td>$${(payment.amount || 0).toFixed(2)}</td>
+            <td><small>${payment.paymentMethod || 'N/A'}</small></td>
+            <td>
+              <span class="badge bg-label-${payment.status === 'completed' ? 'success' : 'warning'}">
+                ${payment.status || 'Pending'}
+              </span>
+            </td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading payment history:', error);
+        document.getElementById('paymentsTableBody').innerHTML = 
+          '<tr><td colspan="4" class="text-center text-danger">Failed to load payments</td></tr>';
+      }
+    };
+
+    const analyzePayments = () => {
+      const container = document.getElementById('assessmentContainer');
+      
+      if (payments.length === 0) {
+        document.getElementById('totalPayments').textContent = '0';
+        document.getElementById('onTimeRate').textContent = '0%';
+        document.getElementById('currentBalance').textContent = '$0.00';
+        
+        container.innerHTML = `
+          <div class="alert alert-info mb-2">
+            <i class="bx bx-info-circle me-2"></i>
+            <strong>No Payment History</strong>
+          </div>
+          <p class="small text-muted mb-0">This is a new tenant with no recorded payments yet.</p>
+          <div class="alert alert-success mt-3">
+            <i class="bx bx-check-circle me-2"></i>
+            <strong>Status: KEEP</strong><br>
+            Monitor future payments to assess reliability.
+          </div>
+        `;
+        return;
+      }
+
+      const onTimePayments = payments.filter(p => p.status === 'completed').length;
+      const onTimeRate = Math.round((onTimePayments / payments.length) * 100);
+      const totalPaid = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+      const expectedTotal = (currentTenant.rent || currentTenant.rentAmount || 0) * payments.length;
+      const balance = expectedTotal - totalPaid;
+
+      document.getElementById('totalPayments').textContent = payments.length;
+      document.getElementById('onTimeRate').textContent = `${onTimeRate}%`;
+      document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
+
+      // Assessment logic
+      let recommendation = 'KEEP';
+      let color = 'success';
+      let reasons = [];
+
+      if (onTimeRate >= 90) {
+        reasons.push('✓ Excellent payment history (90%+ on-time)');
+      } else if (onTimeRate >= 70) {
+        reasons.push('~ Good payment history (70-89% on-time)');
+      } else if (onTimeRate >= 50) {
+        reasons.push('✗ Fair payment history (50-69% on-time)');
+        recommendation = 'REVIEW';
+        color = 'warning';
+      } else {
+        reasons.push('✗ Poor payment history (<50% on-time)');
+        recommendation = 'REMOVE';
+        color = 'danger';
+      }
+
+      if (balance > (currentTenant.rent || currentTenant.rentAmount || 0) * 2) {
+        reasons.push('✗ High outstanding balance');
+        recommendation = 'REMOVE';
+        color = 'danger';
+      } else if (balance > 0) {
+        reasons.push('~ Some outstanding balance');
+        if (recommendation === 'KEEP') {
+          recommendation = 'REVIEW';
+          color = 'warning';
+        }
+      } else if (balance < 0) {
+        reasons.push('✓ Paid in advance');
+      }
+
+      container.innerHTML = `
+        <div class="alert alert-${color} mb-2">
+          <i class="bx bx-${recommendation === 'KEEP' ? 'check-circle' : recommendation === 'REVIEW' ? 'info-circle' : 'x-circle'} me-2"></i>
+          <strong>Recommendation: ${recommendation}</strong>
+        </div>
+        <div class="small">
+          ${reasons.map(r => `<p class="mb-2">${r}</p>`).join('')}
+        </div>
+      `;
+    };
+
+    const terminateTenant = async () => {
+      try {
+        const tenantId = getTenantId();
+        const confirmModal = bootstrap.Modal.getInstance(document.getElementById('terminateModal'));
+
+        // Remove tenant from compartment if assigned
+        if (currentTenant.compartmentNumber) {
+          // Find compartment and remove tenant
+          const compartmentsRes = await fetch(`${API_BASE}/compartments?limit=1000`);
+          const compartmentsData = await compartmentsRes.json();
+          const compartments = compartmentsData.data || [];
+          const compartment = compartments.find(c => c.compartmentNumber === currentTenant.compartmentNumber);
+          
+          if (compartment) {
+            await fetch(`${API_BASE}/compartments/${compartment._id}/remove-tenant`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+        }
+
+        // Delete tenant
+        const response = await fetch(`${API_BASE}/tenants/${tenantId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Failed to delete tenant');
+
+        confirmModal.hide();
+        showAlert('Tenant terminated successfully!', 'success');
+        
+        setTimeout(() => {
+          window.location.href = 'tenants-list.html';
+        }, 1500);
+      } catch (error) {
+        console.error('Error terminating tenant:', error);
+        showAlert('Error terminating tenant: ' + error.message, 'error');
+      }
+    };
+
+    document.getElementById('terminateTenantBtn').addEventListener('click', () => {
+      const modal = new bootstrap.Modal(document.getElementById('terminateModal'));
+      modal.show();
+    });
+
+    document.getElementById('confirmTerminateBtn').addEventListener('click', terminateTenant);
+
+    document.addEventListener('DOMContentLoaded', loadTenantDetails);
+  </script>
+</body>
+</html>

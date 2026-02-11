@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -28,6 +28,9 @@
   <!-- Helpers -->
   <script src="../assets/vendor/js/helpers.js"></script>
   <script src="../assets/js/config.js"></script>
+
+  <!-- Authentication Helper -->
+  <script src="../assets/js/auth.js"></script>
 </head>
 
 <body>
@@ -88,44 +91,12 @@
             </a>
           </li>
 
-          <!-- Properties -->
-          <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="menu-icon tf-icons bx bx-building-house"></i>
-              <div data-i18n="Properties">Properties</div>
-            </a>
-            <ul class="menu-sub">
-              <li class="menu-item">
-                <a href="properties-list.html" class="menu-link">
-                  <div data-i18n="All Properties">All Properties</div>
-                </a>
-              </li>
-              <li class="menu-item">
-                <a href="properties-add.html" class="menu-link">
-                  <div data-i18n="Add Property">Add Property</div>
-                </a>
-              </li>
-            </ul>
-          </li>
-
           <!-- Tenants -->
           <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="tenants-list.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-group"></i>
               <div data-i18n="Tenants">Tenants</div>
             </a>
-            <ul class="menu-sub">
-              <li class="menu-item">
-                <a href="tenants-list.html" class="menu-link">
-                  <div data-i18n="All Tenants">All Tenants</div>
-                </a>
-              </li>
-              <li class="menu-item">
-                <a href="tenants-add.html" class="menu-link">
-                  <div data-i18n="Add Tenant">Add Tenant</div>
-                </a>
-              </li>
-            </ul>
           </li>
 
           <!-- Rent Payments -->
@@ -245,7 +216,7 @@
                   </li>
                   <li><div class="dropdown-divider"></div></li>
                   <li>
-                    <a class="dropdown-item" href="auth-login-basic.html">
+                    <a class="dropdown-item" href="#" data-logout>
                       <i class="bx bx-power-off me-2"></i>
                       <span class="align-middle">Log Out</span>
                     </a>
@@ -276,7 +247,7 @@
                       </div>
                     </div>
                     <span class="fw-semibold d-block mb-1">Total Collected</span>
-                    <h3 class="card-title mb-2">$45,250</h3>
+                    <h3 class="card-title mb-2" id="totalCollected">$45,250</h3>
                     <small class="text-success fw-semibold">This Month</small>
                   </div>
                 </div>
@@ -290,7 +261,7 @@
                       </div>
                     </div>
                     <span class="fw-semibold d-block mb-1">Pending</span>
-                    <h3 class="card-title mb-2">$8,500</h3>
+                    <h3 class="card-title mb-2" id="totalPending">$8,500</h3>
                     <small class="text-warning fw-semibold">Due This Month</small>
                   </div>
                 </div>
@@ -304,7 +275,7 @@
                       </div>
                     </div>
                     <span class="fw-semibold d-block mb-1">Overdue</span>
-                    <h3 class="card-title mb-2">$2,750</h3>
+                    <h3 class="card-title mb-2" id="totalOverdue">$2,750</h3>
                     <small class="text-danger fw-semibold">Requires Action</small>
                   </div>
                 </div>
@@ -318,7 +289,7 @@
                       </div>
                     </div>
                     <span class="fw-semibold d-block mb-1">Total Payments</span>
-                    <h3 class="card-title mb-2">142</h3>
+                    <h3 class="card-title mb-2" id="totalPayments">142</h3>
                     <small class="text-muted fw-semibold">All Time</small>
                   </div>
                 </div>
@@ -330,7 +301,7 @@
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Payment History</h5>
                 <div>
-                  <button type="button" class="btn btn-sm btn-outline-primary me-2">
+                  <button type="button" id="exportBtn" class="btn btn-sm btn-outline-primary me-2">
                     <i class="bx bx-export me-1"></i> Export
                   </button>
                   <a href="index.html" class="btn btn-sm btn-primary">
@@ -345,7 +316,7 @@
                       <tr>
                         <th>Payment ID</th>
                         <th>Tenant</th>
-                        <th>Property</th>
+                        <th>Compartment</th>
                         <th>Amount</th>
                         <th>Date</th>
                         <th>Method</th>
@@ -353,91 +324,9 @@
                         <th>Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="paymentsTableBody">
                       <tr>
-                        <td><strong>#PAY-001</strong></td>
-                        <td>John Smith</td>
-                        <td>Building A - Suite 101</td>
-                        <td><strong>$1,200</strong></td>
-                        <td>2026-01-15</td>
-                        <td><span class="badge bg-label-info">Bank Transfer</span></td>
-                        <td><span class="badge bg-label-success">Paid</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-icon btn-outline-primary">
-                            <i class="bx bx-show"></i>
-                          </button>
-                          <button class="btn btn-sm btn-icon btn-outline-success">
-                            <i class="bx bx-download"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>#PAY-002</strong></td>
-                        <td>Sarah Johnson</td>
-                        <td>Building B - Suite 205</td>
-                        <td><strong>$1,500</strong></td>
-                        <td>2026-01-14</td>
-                        <td><span class="badge bg-label-info">Cash</span></td>
-                        <td><span class="badge bg-label-success">Paid</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-icon btn-outline-primary">
-                            <i class="bx bx-show"></i>
-                          </button>
-                          <button class="btn btn-sm btn-icon btn-outline-success">
-                            <i class="bx bx-download"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>#PAY-003</strong></td>
-                        <td>Michael Brown</td>
-                        <td>Building A - Suite 302</td>
-                        <td><strong>$1,100</strong></td>
-                        <td>2026-01-12</td>
-                        <td><span class="badge bg-label-info">Check</span></td>
-                        <td><span class="badge bg-label-success">Paid</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-icon btn-outline-primary">
-                            <i class="bx bx-show"></i>
-                          </button>
-                          <button class="btn btn-sm btn-icon btn-outline-success">
-                            <i class="bx bx-download"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>#PAY-004</strong></td>
-                        <td>Emily Davis</td>
-                        <td>Building C - Suite 108</td>
-                        <td><strong>$1,300</strong></td>
-                        <td>2026-01-10</td>
-                        <td><span class="badge bg-label-info">Bank Transfer</span></td>
-                        <td><span class="badge bg-label-warning">Pending</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-icon btn-outline-primary">
-                            <i class="bx bx-show"></i>
-                          </button>
-                          <button class="btn btn-sm btn-icon btn-outline-warning">
-                            <i class="bx bx-check"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><strong>#PAY-005</strong></td>
-                        <td>David Wilson</td>
-                        <td>Building B - Suite 401</td>
-                        <td><strong>$1,450</strong></td>
-                        <td>2025-12-28</td>
-                        <td><span class="badge bg-label-info">Cash</span></td>
-                        <td><span class="badge bg-label-danger">Overdue</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-icon btn-outline-primary">
-                            <i class="bx bx-show"></i>
-                          </button>
-                          <button class="btn btn-sm btn-icon btn-outline-danger">
-                            <i class="bx bx-bell"></i>
-                          </button>
-                        </td>
+                        <td colspan="8" class="text-center text-muted">Loading payments...</td>
                       </tr>
                     </tbody>
                   </table>
@@ -503,5 +392,330 @@
   
   <!-- Main JS -->
   <script src="../assets/js/main.js"></script>
+  <script>
+    (function () {
+      const API_BASE = 'http://localhost:5000/api';
+      const tableBody = document.getElementById('paymentsTableBody');
+      const totalCollectedEl = document.getElementById('totalCollected');
+      const totalPendingEl = document.getElementById('totalPending');
+      const totalOverdueEl = document.getElementById('totalOverdue');
+      const totalPaymentsEl = document.getElementById('totalPayments');
+      const exportBtn = document.getElementById('exportBtn');
+
+      // Store payments data globally for export
+      let paymentsData = [];
+
+      const formatCurrency = (value) =>
+        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value || 0);
+
+      const getStatusClass = (status) => {
+        const normalized = String(status || '').toLowerCase();
+        if (normalized === 'paid' || normalized === 'complete' || normalized === 'completed') return 'success';
+        if (normalized === 'pending') return 'warning';
+        if (normalized === 'overdue') return 'danger';
+        if (normalized === 'partial') return 'info';
+        return 'secondary';
+      };
+
+      const getStatusLabel = (status) => {
+        const normalized = String(status || '').toLowerCase();
+        if (!normalized) return 'Unknown';
+        return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+      };
+
+      const getPaymentId = (payment) => payment.paymentId || payment.id || payment._id || 'N/A';
+      const getTenantName = (payment) =>
+        payment.tenantName || payment.tenant?.name || payment.tenant?.fullName || payment.tenant || 'Unknown Tenant';
+      const getCompartmentName = (payment) =>
+        payment.compartmentNumber || payment.compartment?.compartmentNumber || payment.unit || payment.compartmentNumber || 'Unknown Compartment';
+      const getPaymentMethod = (payment) => payment.method || payment.paymentMethod || 'N/A';
+      const getPaymentDate = (payment) => payment.date || payment.paidAt || payment.createdAt || payment.dueDate || '';
+
+      const renderEmpty = (message) => {
+        if (!tableBody) return;
+        tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">${message}</td></tr>`;
+      };
+
+      const updateStats = (payments) => {
+        const totals = payments.reduce(
+          (acc, payment) => {
+            const amount = Number(payment.amount || payment.total || 0) || 0;
+            const status = String(payment.status || '').toLowerCase();
+            acc.total += 1;
+            if (status === 'paid' || status === 'complete' || status === 'completed') {
+              acc.collected += amount;
+            } else if (status === 'pending' || status === 'partial') {
+              acc.pending += amount;
+            } else if (status === 'overdue') {
+              acc.overdue += amount;
+            }
+            return acc;
+          },
+          { collected: 0, pending: 0, overdue: 0, total: 0 }
+        );
+
+        if (totalCollectedEl) totalCollectedEl.textContent = formatCurrency(totals.collected);
+        if (totalPendingEl) totalPendingEl.textContent = formatCurrency(totals.pending);
+        if (totalOverdueEl) totalOverdueEl.textContent = formatCurrency(totals.overdue);
+        if (totalPaymentsEl) totalPaymentsEl.textContent = totals.total.toString();
+      };
+
+      const renderPayments = (payments) => {
+        if (!tableBody) return;
+        if (!payments || payments.length === 0) {
+          renderEmpty('No payments found');
+          updateStats([]);
+          return;
+        }
+
+        // Store payments data for export
+        paymentsData = payments;
+
+        tableBody.innerHTML = payments
+          .map((payment) => {
+            const statusClass = getStatusClass(payment.status);
+            const statusLabel = getStatusLabel(payment.status);
+            return `
+              <tr>
+                <td><strong>#${getPaymentId(payment)}</strong></td>
+                <td>${getTenantName(payment)}</td>
+                <td>${getCompartmentName(payment)}</td>
+                <td><strong>${formatCurrency(payment.amount || payment.total)}</strong></td>
+                <td>${getPaymentDate(payment)}</td>
+                <td><span class="badge bg-label-info">${getPaymentMethod(payment)}</span></td>
+                <td><span class="badge bg-label-${statusClass}">${statusLabel}</span></td>
+                <td>
+                  <button class="btn btn-sm btn-icon btn-outline-primary">
+                    <i class="bx bx-show"></i>
+                  </button>
+                  <button class="btn btn-sm btn-icon btn-outline-success">
+                    <i class="bx bx-download"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+
+        updateStats(payments);
+      };
+
+      // Export functions
+      const exportToCSV = () => {
+        if (!paymentsData || paymentsData.length === 0) {
+          alert('No payment data to export');
+          return;
+        }
+
+        // CSV Headers
+        const headers = ['Payment ID', 'Tenant', 'Compartment', 'Amount', 'Date', 'Method', 'Status'];
+        
+        // CSV Rows
+        const rows = paymentsData.map(payment => [
+          getPaymentId(payment),
+          getTenantName(payment),
+          getCompartmentName(payment),
+          payment.amount || payment.total || 0,
+          getPaymentDate(payment),
+          getPaymentMethod(payment),
+          getStatusLabel(payment.status)
+        ]);
+
+        // Create CSV content
+        const csvContent = [
+          headers.join(','),
+          ...rows.map(row => row.map(cell => {
+            // Escape cells containing commas or quotes
+            const cellStr = String(cell).replace(/"/g, '""');
+            return cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n') 
+              ? `"${cellStr}"` 
+              : cellStr;
+          }).join(','))
+        ].join('\n');
+
+        // Download CSV file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const timestamp = new Date().toISOString().split('T')[0];
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `payment_history_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const exportToExcel = () => {
+        if (!paymentsData || paymentsData.length === 0) {
+          alert('No payment data to export');
+          return;
+        }
+
+        // Create HTML table for Excel
+        const timestamp = new Date().toISOString().split('T')[0];
+        const title = `Payment History - ${timestamp}`;
+        
+        let tableHTML = `
+          <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+          <head>
+            <meta charset="utf-8">
+            <style>
+              table { border-collapse: collapse; width: 100%; }
+              th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+              th { background-color: #696cff; color: white; font-weight: bold; }
+              .title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+              .paid { background-color: #d4edda; }
+              .pending { background-color: #fff3cd; }
+              .overdue { background-color: #f8d7da; }
+            </style>
+          </head>
+          <body>
+            <div class="title">${title}</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Payment ID</th>
+                  <th>Tenant</th>
+                  <th>Compartment</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        paymentsData.forEach(payment => {
+          const status = String(payment.status || '').toLowerCase();
+          const rowClass = status === 'paid' || status === 'complete' || status === 'completed' ? 'paid' 
+                         : status === 'pending' ? 'pending'
+                         : status === 'overdue' ? 'overdue' : '';
+          
+          tableHTML += `
+            <tr class="${rowClass}">
+              <td>${getPaymentId(payment)}</td>
+              <td>${getTenantName(payment)}</td>
+              <td>${getCompartmentName(payment)}</td>
+              <td>${formatCurrency(payment.amount || payment.total)}</td>
+              <td>${getPaymentDate(payment)}</td>
+              <td>${getPaymentMethod(payment)}</td>
+              <td>${getStatusLabel(payment.status)}</td>
+            </tr>
+          `;
+        });
+
+        tableHTML += `
+              </tbody>
+            </table>
+          </body>
+          </html>
+        `;
+
+        // Download Excel file
+        const blob = new Blob([tableHTML], { type: 'application/vnd.ms-excel' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `payment_history_${timestamp}.xls`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+      const showExportMenu = () => {
+        if (!paymentsData || paymentsData.length === 0) {
+          alert('No payment data to export. Please wait for data to load.');
+          return;
+        }
+
+        // Create modal/menu for export options
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+        `;
+        
+        modal.innerHTML = `
+          <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); min-width: 300px;">
+            <h5 style="margin-top: 0; margin-bottom: 20px; color: #333;">Export Payment History</h5>
+            <p style="color: #666; margin-bottom: 20px;">Choose your preferred format:</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button id="exportCSVBtn" class="btn btn-outline-primary" style="width: 100%;">
+                <i class="bx bx-file me-1"></i> Export as CSV
+              </button>
+              <button id="exportExcelBtn" class="btn btn-outline-success" style="width: 100%;">
+                <i class="bx bx-spreadsheet me-1"></i> Export as Excel
+              </button>
+              <button id="cancelExportBtn" class="btn btn-outline-secondary" style="width: 100%; margin-top: 10px;">
+                Cancel
+              </button>
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Event listeners
+        document.getElementById('exportCSVBtn').addEventListener('click', () => {
+          exportToCSV();
+          document.body.removeChild(modal);
+        });
+
+        document.getElementById('exportExcelBtn').addEventListener('click', () => {
+          exportToExcel();
+          document.body.removeChild(modal);
+        });
+
+        document.getElementById('cancelExportBtn').addEventListener('click', () => {
+          document.body.removeChild(modal);
+        });
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            document.body.removeChild(modal);
+          }
+        });
+      };
+
+      // Attach export button event
+      if (exportBtn) {
+        exportBtn.addEventListener('click', showExportMenu);
+      }
+
+      const loadPayments = async () => {
+        if (!tableBody) return;
+        renderEmpty('Loading payments...');
+        try {
+          const res = await fetch(`${API_BASE}/payments`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          const payments = Array.isArray(data)
+            ? data
+            : data.data || data.payments || [];
+          renderPayments(payments);
+        } catch (err) {
+          console.error('Failed to load payments:', err);
+          renderEmpty('Unable to load payments. Please check the backend server.');
+          updateStats([]);
+        }
+      };
+
+      loadPayments();
+    })();
+  </script>
 </body>
 </html>

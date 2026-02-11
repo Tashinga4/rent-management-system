@@ -1,0 +1,332 @@
+<!-- System Status Widget - Add this to any page -->
+<style>
+  #systemStatusWidget {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 15px 20px;
+    min-width: 280px;
+    font-family: 'Public Sans', sans-serif;
+    transition: all 0.3s ease;
+  }
+  
+  #systemStatusWidget.minimized {
+    padding: 10px 15px;
+    min-width: auto;
+  }
+  
+  .status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  .status-dot.online {
+    background: #71dd37;
+    box-shadow: 0 0 8px rgba(113, 221, 55, 0.5);
+  }
+  
+  .status-dot.offline {
+    background: #ff3e1d;
+    box-shadow: 0 0 8px rgba(255, 62, 29, 0.5);
+  }
+  
+  .status-dot.checking {
+    background: #ffab00;
+    box-shadow: 0 0 8px rgba(255, 171, 0, 0.5);
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .minimize-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #697a8d;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .minimize-btn:hover {
+    color: #566a7f;
+  }
+  
+  .status-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 5px 0;
+  }
+  
+  .status-label {
+    color: #697a8d;
+  }
+  
+  .status-value {
+    font-weight: 600;
+  }
+  
+  .status-value.online {
+    color: #71dd37;
+  }
+  
+  .status-value.offline {
+    color: #ff3e1d;
+  }
+  
+  .start-services-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #696cff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .start-services-btn:hover {
+    background: #5f61e6;
+  }
+  
+  .start-services-btn:active {
+    transform: scale(0.98);
+  }
+  
+  .start-services-btn.loading {
+    background: #697a8d;
+    cursor: not-allowed;
+  }
+  
+  .widget-content {
+    display: block;
+  }
+  
+  .widget-content.hidden {
+    display: none;
+  }
+  
+  .error-message {
+    font-size: 11px;
+    color: #ff3e1d;
+    margin-top: 5px;
+    text-align: center;
+  }
+</style>
+
+<div id="systemStatusWidget">
+  <div class="status-header">
+    <div class="status-indicator">
+      <div class="status-dot checking" id="statusDot"></div>
+      <span id="statusText">Checking...</span>
+    </div>
+    <button class="minimize-btn" id="minimizeBtn" title="Minimize">−</button>
+  </div>
+  
+  <div class="widget-content" id="widgetContent">
+    <div class="status-details">
+      <div class="status-row">
+        <span class="status-label">Frontend:</span>
+        <span class="status-value online" id="frontendStatus">✓ Online</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Backend API:</span>
+        <span class="status-value" id="backendStatus">Checking...</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Database:</span>
+        <span class="status-value" id="databaseStatus">Checking...</span>
+      </div>
+    </div>
+    
+    <button class="start-services-btn" id="startServicesBtn" style="display: none;">
+      🚀 Start System
+    </button>
+    
+    <div class="error-message" id="errorMessage" style="display: none;"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const API_BASE = 'http://localhost:5000/api';
+  const CHECK_INTERVAL = 10000; // Check every 10 seconds
+  let isMinimized = false;
+  let checkIntervalId = null;
+  
+  const elements = {
+    widget: document.getElementById('systemStatusWidget'),
+    statusDot: document.getElementById('statusDot'),
+    statusText: document.getElementById('statusText'),
+    frontendStatus: document.getElementById('frontendStatus'),
+    backendStatus: document.getElementById('backendStatus'),
+    databaseStatus: document.getElementById('databaseStatus'),
+    startBtn: document.getElementById('startServicesBtn'),
+    minimizeBtn: document.getElementById('minimizeBtn'),
+    widgetContent: document.getElementById('widgetContent'),
+    errorMessage: document.getElementById('errorMessage')
+  };
+  
+  // Check system status
+  async function checkStatus() {
+    try {
+      const response = await fetch(`${API_BASE}/health`, {
+        method: 'GET',
+        cache: 'no-cache'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        updateStatus(true, data);
+      } else {
+        updateStatus(false);
+      }
+    } catch (error) {
+      updateStatus(false);
+    }
+  }
+  
+  // Update UI based on status
+  function updateStatus(isOnline, data = null) {
+    // Frontend is always online if page is loaded
+    elements.frontendStatus.textContent = '✓ Online';
+    elements.frontendStatus.className = 'status-value online';
+    
+    if (isOnline && data) {
+      // Backend is online
+      elements.statusDot.className = 'status-dot online';
+      elements.statusText.textContent = 'System Online';
+      elements.backendStatus.textContent = '✓ Online';
+      elements.backendStatus.className = 'status-value online';
+      elements.databaseStatus.textContent = data.database || 'Connected';
+      elements.databaseStatus.className = 'status-value online';
+      elements.startBtn.style.display = 'none';
+      elements.errorMessage.style.display = 'none';
+    } else {
+      // Backend is offline
+      elements.statusDot.className = 'status-dot offline';
+      elements.statusText.textContent = 'Backend Offline';
+      elements.backendStatus.textContent = '✗ Offline';
+      elements.backendStatus.className = 'status-value offline';
+      elements.databaseStatus.textContent = '✗ Unknown';
+      elements.databaseStatus.className = 'status-value offline';
+      elements.startBtn.style.display = 'block';
+      elements.errorMessage.style.display = 'none';
+    }
+  }
+  
+  // Start services
+  elements.startBtn.addEventListener('click', async function() {
+    const btn = this;
+    const originalText = btn.textContent;
+    
+    btn.textContent = '⏳ Starting...';
+    btn.classList.add('loading');
+    btn.disabled = true;
+    
+    try {
+      // Create a temporary link to open the batch file
+      const startupPath = window.location.protocol + '//' + window.location.host + '/START-SYSTEM.bat';
+      
+      // Try to open in new window (works if file is accessible)
+      const newWindow = window.open('../../START-SYSTEM.bat', '_blank');
+      
+      if (!newWindow) {
+        // If popup blocked, show instructions
+        elements.errorMessage.textContent = 'Please run START-SYSTEM.bat from the project folder';
+        elements.errorMessage.style.display = 'block';
+      } else {
+        elements.errorMessage.textContent = 'Starting... Please check the new window';
+        elements.errorMessage.style.display = 'block';
+        elements.errorMessage.style.color = '#03c3ec';
+      }
+      
+      // Wait and recheck
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        
+        // Recheck status after 5 seconds
+        setTimeout(checkStatus, 5000);
+      }, 2000);
+      
+    } catch (error) {
+      elements.errorMessage.textContent = 'Please manually run START-SYSTEM.bat';
+      elements.errorMessage.style.display = 'block';
+      
+      btn.textContent = originalText;
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  });
+  
+  // Minimize/maximize widget
+  elements.minimizeBtn.addEventListener('click', function() {
+    isMinimized = !isMinimized;
+    
+    if (isMinimized) {
+      elements.widget.classList.add('minimized');
+      elements.widgetContent.classList.add('hidden');
+      this.textContent = '+';
+      this.title = 'Expand';
+    } else {
+      elements.widget.classList.remove('minimized');
+      elements.widgetContent.classList.remove('hidden');
+      this.textContent = '−';
+      this.title = 'Minimize';
+    }
+  });
+  
+  // Initial check
+  checkStatus();
+  
+  // Set up periodic checking
+  checkIntervalId = setInterval(checkStatus, CHECK_INTERVAL);
+  
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', function() {
+    if (checkIntervalId) {
+      clearInterval(checkIntervalId);
+    }
+  });
+})();
+</script>

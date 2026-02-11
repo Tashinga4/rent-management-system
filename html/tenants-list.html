@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -27,6 +27,9 @@
   <!-- Helpers -->
   <script src="../assets/vendor/js/helpers.js"></script>
   <script src="../assets/js/config.js"></script>
+
+  <!-- Authentication Helper -->
+  <script src="../assets/js/auth.js"></script>
 </head>
 
 <body>
@@ -58,39 +61,27 @@
           <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
               <i class="menu-icon tf-icons bx bx-building"></i>
-              <div data-i18n="Layouts">Properties</div>
+              <div data-i18n="Layouts">Apartments</div>
             </a>
             <ul class="menu-sub">
               <li class="menu-item">
-                <a href="properties-list.html" class="menu-link">
-                  <div data-i18n="Without menu">All Properties</div>
+                <a href="Apartments-list.html" class="menu-link">
+                  <div data-i18n="Without menu">All Apartments</div>
                 </a>
               </li>
               <li class="menu-item">
-                <a href="properties-add.html" class="menu-link">
-                  <div data-i18n="Without navbar">Add Property</div>
+                <a href="Apartments-add.html" class="menu-link">
+                  <div data-i18n="Without navbar">Add Apartment</div>
                 </a>
               </li>
             </ul>
           </li>
 
-          <li class="menu-item active open">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <li class="menu-item active">
+            <a href="tenants-list.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-user"></i>
               <div data-i18n="Account Settings">Tenants</div>
             </a>
-            <ul class="menu-sub">
-              <li class="menu-item active">
-                <a href="tenants-list.html" class="menu-link">
-                  <div data-i18n="Account">All Tenants</div>
-                </a>
-              </li>
-              <li class="menu-item">
-                <a href="tenants-add.html" class="menu-link">
-                  <div data-i18n="Notifications">Add Tenant</div>
-                </a>
-              </li>
-            </ul>
           </li>
 
           <li class="menu-item">
@@ -150,7 +141,7 @@
                   </li>
                   <li><div class="dropdown-divider"></div></li>
                   <li>
-                    <a class="dropdown-item" href="auth-login-basic.html">
+                    <a class="dropdown-item" href="#" data-logout>
                       <i class="bx bx-power-off me-2"></i>
                       <span class="align-middle">Log Out</span>
                     </a>
@@ -173,9 +164,11 @@
             <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Tenant Payment Tracking</h5>
-                <a href="tenants-add.html" class="btn btn-primary btn-sm">
-                  <i class="bx bx-plus me-1"></i> Add Tenant
-                </a>
+                <div class="d-flex gap-2">
+                  <a href="tenants-add.html" class="btn btn-primary btn-sm">
+                    <i class="bx bx-plus me-1"></i> Add Tenant
+                  </a>
+                </div>
               </div>
               <div class="card-body">
                 <div class="table-responsive text-nowrap">
@@ -183,13 +176,14 @@
                     <thead>
                       <tr>
                         <th>Tenant</th>
-                        <th>Property</th>
+                        <th>Compartment</th>
                         <th>Move-In Date</th>
                         <th>Monthly Rent</th>
                         <th>Balance</th>
                         <th>Next Due Date</th>
                         <th>Days Until Due</th>
                         <th>Payment Status</th>
+                        <th>Room Status</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -279,8 +273,15 @@
   <script>
     const tenantsList = {
       tenants: [],
-      properties: [],
+      Apartments: [],
       suites: [],
+      normalizeTenant(tenant) {
+        const name = tenant.name || [tenant.firstName, tenant.lastName].filter(Boolean).join(' ') || 'N/A';
+        const moveInDate = tenant.moveInDate || tenant.leaseStart || tenant.moveIn || null;
+        const rent = typeof tenant.rent === 'number' ? tenant.rent : (tenant.rentAmount ?? 0);
+        const compartmentNumber = tenant.compartmentNumber || tenant.compartment || '';
+        return { ...tenant, name, moveInDate, rent, compartmentNumber };
+      },
       
       async init() {
         await this.loadData();
@@ -295,8 +296,9 @@
             api.getSuites()
           ]);
           
-          this.tenants = tenantsRes.data || tenantsRes || [];
-          this.properties = propertiesRes.data || propertiesRes || [];
+          const rawTenants = tenantsRes.data || tenantsRes || [];
+          this.tenants = rawTenants.map((tenant) => this.normalizeTenant(tenant));
+          this.Apartments = propertiesRes.data || propertiesRes || [];
           this.suites = suitesRes.data || suitesRes || [];
           this.renderTenants();
         } catch (error) {
@@ -341,8 +343,9 @@
         `;
         
         // Set expected rent and date
-        document.getElementById('expectedRent').textContent = tenant.rent.toFixed(2);
-        document.getElementById('paymentAmount').value = tenant.rent.toFixed(2);
+        const expectedRent = typeof tenant.rent === 'number' ? tenant.rent : 0;
+        document.getElementById('expectedRent').textContent = expectedRent.toFixed(2);
+        document.getElementById('paymentAmount').value = expectedRent.toFixed(2);
         document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
         document.getElementById('paymentNotes').value = '';
         
@@ -359,7 +362,7 @@
       
       analyzePayment() {
         const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
-        const expectedRent = this.currentPaymentTenant.rent;
+        const expectedRent = this.currentPaymentTenant.rent || 0;
         const analysisDiv = document.getElementById('paymentAnalysis');
         
         if (amount === 0) {
@@ -400,7 +403,7 @@
           }
           
           const tenant = this.currentPaymentTenant;
-          const expectedRent = tenant.rent;
+          const expectedRent = typeof tenant.rent === 'number' ? tenant.rent : 0;
           const difference = amount - expectedRent;
           
           // Determine payment status
@@ -464,7 +467,7 @@
         if (this.tenants.length === 0) {
           tbody.innerHTML = `
             <tr>
-              <td colspan="9" class="text-center py-5">
+              <td colspan="10" class="text-center py-5">
                 <i class="bx bx-user-x bx-lg text-muted mb-3 d-block"></i>
                 <p class="text-muted mb-0">No tenants found</p>
                 <a href="tenants-add.html" class="btn btn-sm btn-primary mt-2">
@@ -477,24 +480,28 @@
         }
         
         tbody.innerHTML = this.tenants.map(tenant => {
-          const suite = this.suites.find(s => s._id === tenant.suiteId);
-          const property = this.properties.find(p => p._id === tenant.propertyId);
-          const propertyName = property ? property.name : 'Unknown';
-          const suiteNumber = suite ? suite.suiteNumber : 'No Suite';
-          const displayLocation = `${propertyName} - ${suiteNumber}`;
+          const Apartment = this.Apartments.find(p => p._id === tenant.propertyId);
+          const propertyName = Apartment ? Apartment.name : 'Unknown';
+          const compartmentLabel = tenant.compartmentNumber ? `Compartment ${tenant.compartmentNumber}` : 'No Compartment';
+          const displayLocation = `${propertyName} - ${compartmentLabel}`;
           
-          const nextDue = this.calculateNextDueDate(tenant.moveInDate);
+          const nextDue = this.calculateNextDueDate(tenant.moveInDate || new Date().toISOString());
           const daysUntil = this.calculateDaysUntilDue(nextDue);
-          const paymentStatus = tenant.paymentStatus || 'pending';
           
-          const statusColors = {
-            'paid': 'success',
-            'pending': 'warning',
-            'overdue': 'danger'
-          };
+          // Only show 'paid' status if tenant has actually paid (balance <= 0 and recent payment)
+          const hasPaid = tenant.paymentStatus === 'paid' && (tenant.balance === undefined || tenant.balance <= 0) && tenant.lastPaymentDate;
+          const isOverdue = daysUntil < 0;
           
-          const statusColor = daysUntil < 0 ? 'danger' : statusColors[paymentStatus];
-          const statusText = daysUntil < 0 ? 'Overdue' : paymentStatus;
+          let statusText = 'Pending';
+          let statusColor = 'warning';
+          
+          if (hasPaid) {
+            statusText = 'Paid';
+            statusColor = 'info'; // Subtle teal/blue color
+          } else if (isOverdue) {
+            statusText = 'Overdue';
+            statusColor = 'danger';
+          }
           
           const daysColor = daysUntil < 0 ? 'text-danger' : daysUntil < 7 ? 'text-warning' : 'text-success';
           
@@ -521,16 +528,16 @@
               </td>
               <td>
                 <div>
-                  <strong>${propertyName}</strong>
-                  <br>
-                  <small class="text-muted">
-                    <i class="bx bx-door-open"></i> ${suiteNumber}
-                  </small>
+                    <strong>${propertyName}</strong>
+                    <br>
+                    <small class="text-muted">
+                      <i class="bx bx-door-open"></i> ${compartmentLabel}
+                    </small>
                 </div>
               </td>
               <td>${tenant.moveInDate ? new Date(tenant.moveInDate).toLocaleDateString() : 'N/A'}</td>
+              <td>${tenant.moveInDate ? new Date(tenant.moveInDate).toLocaleDateString() : 'N/A'}</td>
               <td>$${tenant.rent ? tenant.rent.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</td>
-              <td>
                 <span class="${balanceColor} fw-semibold">${balanceText}</span>
               </td>
               <td>${nextDue.toLocaleDateString()}</td>
@@ -540,6 +547,12 @@
               </td>
               <td>
                 <span class="badge bg-label-${statusColor} text-capitalize">${statusText}</span>
+              </td>
+              <td>
+                ${tenant.compartmentNumber ? 
+                  `<span class="badge bg-label-success"><i class="bx bx-check"></i> Assigned</span>` : 
+                  `<span class="badge bg-label-secondary"><i class="bx bx-x"></i> Not Assigned</span>`
+                }
               </td>
               <td>
                 <button onclick="tenantsList.openPaymentModal('${tenant._id}')" 
@@ -586,5 +599,16 @@
   
   <!-- Main JS -->
   <script src="../assets/js/main.js"></script>
+  
+  <!-- System Status Widget -->
+  <script>
+    fetch('system-status-widget.html')
+      .then(response => response.text())
+      .then(html => {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        document.body.appendChild(div);
+      });
+  </script>
 </body>
 </html>

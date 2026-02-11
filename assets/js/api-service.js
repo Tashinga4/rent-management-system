@@ -1,12 +1,71 @@
 // API Configuration
 const API_BASE_URL = 'http://localhost:5000/api';
 
+const defaultTenants = [
+  {
+    _id: 't-001',
+    name: 'John Doe',
+    email: 'john.doe@email.com',
+    phone: '555-0101',
+    rent: 1200,
+    rentAmount: 1200,
+    status: 'active',
+    paymentStatus: 'pending'
+  },
+  {
+    _id: 't-002',
+    name: 'Mary Johnson',
+    email: 'mary.johnson@email.com',
+    phone: '555-0102',
+    rent: 1100,
+    rentAmount: 1100,
+    status: 'active',
+    paymentStatus: 'paid'
+  },
+  {
+    _id: 't-003',
+    name: 'Samuel Clark',
+    email: 'samuel.clark@email.com',
+    phone: '555-0103',
+    rent: 1300,
+    rentAmount: 1300,
+    status: 'active',
+    paymentStatus: 'overdue'
+  }
+];
+
+const safeFetchJson = async (endpoint, cacheKey, fallback = []) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`);
+    const data = await response.json();
+    const payload = data.data || data || [];
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify(payload));
+    } catch (storageError) {
+      console.warn('Unable to cache data:', storageError);
+    }
+    return data;
+  } catch (error) {
+    let cached = [];
+    try {
+      cached = JSON.parse(localStorage.getItem(cacheKey) || '[]');
+    } catch (parseError) {
+      cached = [];
+    }
+
+    if (!cached.length) {
+      cached = fallback;
+    }
+
+    return { data: cached, offline: true, error: String(error) };
+  }
+};
+
 // API Service
 const api = {
   // Properties
   async getProperties() {
-    const response = await fetch(`${API_BASE_URL}/properties`);
-    return response.json();
+    return safeFetchJson('/properties', 'propertiesCache', []);
   },
   
   async getProperty(id) {
@@ -41,8 +100,7 @@ const api = {
   
   // Tenants
   async getTenants() {
-    const response = await fetch(`${API_BASE_URL}/tenants`);
-    return response.json();
+    return safeFetchJson('/tenants', 'tenantsCache', defaultTenants);
   },
   
   async getTenant(id) {
@@ -128,8 +186,7 @@ const api = {
 
   // Suites
   async getSuites() {
-    const response = await fetch(`${API_BASE_URL}/suites`);
-    return response.json();
+    return safeFetchJson('/suites', 'suitesCache', []);
   },
 
   async getSuitesByProperty(propertyId) {

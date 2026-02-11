@@ -177,22 +177,10 @@ class DashboardController {
   }
 
   updatePropertyStats() {
-    const propertyTypes = {
-      'Studio': 0,
-      '1-Bedroom': 0,
-      '2-Bedroom': 0,
-      '3-Bedroom': 0,
-      '4-Bedroom': 0
-    };
-
-    // Count properties by type
-    this.properties.forEach(prop => {
-      if (propertyTypes.hasOwnProperty(prop.type)) {
-        propertyTypes[prop.type]++;
-      }
-    });
-
+    const totalCount = this.properties.length;
     const vacantCount = this.properties.filter(p => p.status === 'vacant').length;
+    const maintenanceCount = this.properties.filter(p => p.status === 'maintenance').length;
+    const occupiedCount = Math.max(totalCount - vacantCount - maintenanceCount, 0);
 
     // Update the statistics in the Property Statistics card
     const statsCard = Array.from(document.querySelectorAll('.card-header')).find(
@@ -208,15 +196,15 @@ class DashboardController {
 
       const totalHeader = card.querySelector('h2.mb-2');
       if (totalHeader) {
-        totalHeader.textContent = this.properties.length;
+        totalHeader.textContent = totalCount;
       }
 
       const items = card.querySelectorAll('li .user-progress small.fw-semibold');
       if (items.length >= 4) {
-        items[0].textContent = propertyTypes['Studio'] + propertyTypes['1-Bedroom'];
-        items[1].textContent = propertyTypes['2-Bedroom'];
-        items[2].textContent = propertyTypes['3-Bedroom'] + propertyTypes['4-Bedroom'];
-        items[3].textContent = vacantCount;
+        items[0].textContent = occupiedCount;
+        items[1].textContent = vacantCount;
+        items[2].textContent = maintenanceCount;
+        items[3].textContent = totalCount;
       }
     }
   }
@@ -554,7 +542,6 @@ class DashboardController {
                   </div>
                   <div>
                     <h6 class="mb-0">${property.name}</h6>
-                    <small class="text-muted">${property.type || 'N/A'}</small>
                   </div>
                 </div>
                 <span class="badge bg-label-${statusColor}">${property.status || 'N/A'}</span>

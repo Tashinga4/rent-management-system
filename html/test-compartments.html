@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compartments Test</title>
+</head>
+<body>
+    <h1>Compartments API Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        console.log('🚀 Test page loaded');
+        const API_BASE = 'http://localhost:5000/api';
+        
+        async function testAPI() {
+            try {
+                console.log('📡 Fetching from:', `${API_BASE}/compartments`);
+                const response = await fetch(`${API_BASE}/compartments`);
+                console.log('📥 Response status:', response.status, response.statusText);
+                
+                const data = await response.json();
+                console.log('📦 Data received:', data);
+                
+                const count = data.data ? data.data.length : 0;
+                console.log('🔢 Compartments count:', count);
+                
+                document.getElementById('result').innerHTML = `
+                    <h2>Results:</h2>
+                    <p><strong>Total Compartments:</strong> ${count}</p>
+                    <p><strong>API Response:</strong></p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('❌ Error:', error);
+                document.getElementById('result').innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>

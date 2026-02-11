@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-  <title>Properties List - RentMS</title>
+  <title>Apartments List - RentMS</title>
   <meta name="description" content="" />
   
   <!-- Favicon -->
@@ -57,21 +57,21 @@
             </a>
           </li>
 
-          <!-- Properties -->
+          <!-- Apartments -->
           <li class="menu-item active open">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
               <i class="menu-icon tf-icons bx bx-building"></i>
-              <div data-i18n="Layouts">Properties</div>
+              <div data-i18n="Layouts">Apartments</div>
             </a>
             <ul class="menu-sub">
               <li class="menu-item active">
-                <a href="properties-list.html" class="menu-link">
-                  <div data-i18n="Without menu">All Properties</div>
+                <a href="Apartments-list.html" class="menu-link">
+                  <div data-i18n="Without menu">All Apartments</div>
                 </a>
               </li>
               <li class="menu-item">
-                <a href="properties-add.html" class="menu-link">
-                  <div data-i18n="Without navbar">Add Property</div>
+                <a href="Apartments-add.html" class="menu-link">
+                  <div data-i18n="Without navbar">Add Apartment</div>
                 </a>
               </li>
             </ul>
@@ -79,22 +79,10 @@
 
           <!-- Tenants -->
           <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="tenants-list.html" class="menu-link">
               <i class="menu-icon tf-icons bx bx-user"></i>
               <div data-i18n="Account Settings">Tenants</div>
             </a>
-            <ul class="menu-sub">
-              <li class="menu-item">
-                <a href="tenants-list.html" class="menu-link">
-                  <div data-i18n="Account">All Tenants</div>
-                </a>
-              </li>
-              <li class="menu-item">
-                <a href="tenants-add.html" class="menu-link">
-                  <div data-i18n="Notifications">Add Tenant</div>
-                </a>
-              </li>
-            </ul>
           </li>
 
           <!-- Payments -->
@@ -215,15 +203,15 @@
           <!-- Content -->
           <div class="container-xxl flex-grow-1 container-p-y">
             <h4 class="fw-bold py-3 mb-4">
-              <span class="text-muted fw-light">Properties /</span> All Properties
+              <span class="text-muted fw-light">Apartments /</span> All Apartments
             </h4>
 
-            <!-- Properties Table -->
+            <!-- Apartments Table -->
             <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Property List</h5>
-                <a href="properties-add.html" class="btn btn-primary btn-sm">
-                  <i class="bx bx-plus me-1"></i> Add Property
+                <h5 class="mb-0">Apartment List</h5>
+                <a href="Apartments-add.html" class="btn btn-primary btn-sm">
+                  <i class="bx bx-plus me-1"></i> Add Apartment
                 </a>
               </div>
               <div class="card-body">
@@ -231,8 +219,7 @@
                   <table class="table table-hover">
                     <thead>
                       <tr>
-                        <th>Property</th>
-                        <th>Type</th>
+                        <th>Apartment</th>
                         <th>Rent</th>
                         <th>Capacity</th>
                         <th>Rooms/Tenant</th>
@@ -243,11 +230,11 @@
                     </thead>
                     <tbody class="table-border-bottom-0" id="propertiesTableBody">
                       <tr>
-                        <td colspan="8" class="text-center">
+                        <td colspan="7" class="text-center">
                           <div class="spinner-border spinner-border-sm text-primary" role="status">
                             <span class="visually-hidden">Loading...</span>
                           </div>
-                          Loading properties...
+                          Loading Apartments...
                         </td>
                       </tr>
                     </tbody>
@@ -255,7 +242,7 @@
                 </div>
               </div>
             </div>
-            <!--/ Properties Table -->
+            <!--/ Apartments Table -->
           </div>
           <!-- / Content -->
 
@@ -290,10 +277,10 @@
   <!-- API Service -->
   <script src="../assets/js/api-service.js"></script>
   
-  <!-- Properties List Controller -->
+  <!-- Apartments List Controller -->
   <script>
     const propertiesList = {
-      properties: [],
+      Apartments: [],
       
       async init() {
         await this.loadProperties();
@@ -302,26 +289,26 @@
       async loadProperties() {
         try {
           const response = await api.getProperties();
-          this.properties = response.data || response || [];
+          this.Apartments = response.data || response || [];
           this.renderProperties();
         } catch (error) {
-          console.error('Error loading properties:', error);
-          this.showError('Failed to load properties');
+          console.error('Error loading Apartments:', error);
+          this.showError('Failed to load Apartments');
         }
       },
       
       renderProperties() {
         const tbody = document.getElementById('propertiesTableBody');
         
-        if (this.properties.length === 0) {
+        if (this.Apartments.length === 0) {
           tbody.innerHTML = `
             <tr>
               <td colspan="8" class="text-center">
                 <div class="py-4">
                   <i class="bx bx-building bx-lg text-muted mb-3"></i>
-                  <p class="text-muted mb-0">No properties found</p>
-                  <a href="properties-add.html" class="btn btn-sm btn-primary mt-2">
-                    <i class="bx bx-plus me-1"></i> Add Your First Property
+                  <p class="text-muted mb-0">No Apartments found</p>
+                  <a href="Apartments-add.html" class="btn btn-sm btn-primary mt-2">
+                    <i class="bx bx-plus me-1"></i> Add Your First Apartment
                   </a>
                 </div>
               </td>
@@ -330,22 +317,19 @@
           return;
         }
         
-        tbody.innerHTML = this.properties.map(property => `
+        tbody.innerHTML = this.Apartments.map(Apartment => `
           <tr>
             <td>
-              <strong>${property.name}</strong>
+              <strong>${Apartment.name}</strong>
               <br>
-              <small class="text-muted">${property.address || 'N/A'}</small>
+              <small class="text-muted">${Apartment.address || 'N/A'}</small>
             </td>
+            <td>$${Apartment.rent ? Apartment.rent.toLocaleString() : '0'}</td>
+            <td>${Apartment.capacity || 'N/A'}</td>
+            <td>${Apartment.roomsPerTenant || 'N/A'}</td>
+            <td>${Apartment.suites || 'N/A'}</td>
             <td>
-              <span class="badge bg-label-info">${property.type || 'N/A'}</span>
-            </td>
-            <td>$${property.rent ? property.rent.toLocaleString() : '0'}</td>
-            <td>${property.capacity || 'N/A'}</td>
-            <td>${property.roomsPerTenant || 'N/A'}</td>
-            <td>${property.suites || 'N/A'}</td>
-            <td>
-              ${this.getStatusBadge(property.status)}
+              ${this.getStatusBadge(Apartment.status)}
             </td>
             <td>
               <div class="dropdown">
@@ -353,10 +337,10 @@
                   <i class="bx bx-dots-vertical-rounded"></i>
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="properties-edit.html?id=${property._id}">
+                  <a class="dropdown-item" href="Apartments-edit.html?id=${Apartment._id}">
                     <i class="bx bx-edit-alt me-1"></i> Edit
                   </a>
-                  <a class="dropdown-item" href="javascript:void(0);" onclick="propertiesList.deleteProperty('${property._id}', '${property.name}')">
+                  <a class="dropdown-item" href="javascript:void(0);" onclick="propertiesList.deleteProperty('${Apartment._id}', '${Apartment.name}')">
                     <i class="bx bx-trash me-1"></i> Delete
                   </a>
                 </div>
@@ -383,11 +367,11 @@
         
         try {
           await api.deleteProperty(id);
-          this.showSuccess('Property deleted successfully');
+          this.showSuccess('Apartment deleted successfully');
           await this.loadProperties();
         } catch (error) {
-          console.error('Error deleting property:', error);
-          this.showError('Failed to delete property');
+          console.error('Error deleting Apartment:', error);
+          this.showError('Failed to delete Apartment');
         }
       },
       

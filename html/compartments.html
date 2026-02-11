@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>Compartments - RentMS</title>
+
+  <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+  <link rel="stylesheet" href="../assets/css/demo.css" />
+  <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+
+  <!-- Toast Notification Styles -->
+  <style>
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 400px;
+    }
+    
+    .toast-notification {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.3s ease-out;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+    
+    .toast-notification.removing {
+      animation: slideOut 0.3s ease-out forwards;
+    }
+    
+    .toast-notification.success {
+      background-color: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+    
+    .toast-notification.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .toast-notification.warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .toast-notification.info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border-left: 4px solid #17a2b8;
+    }
+    
+    .toast-close {
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: auto;
+      font-size: 18px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    
+    .toast-close:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo">
+          <a href="index.html" class="app-brand-link">
+            <span class="app-brand-logo demo">
+              <i class='bx bxs-building-house' style="font-size: 30px; color: #696cff;"></i>
+            </span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">RentMS</span>
+          </a>
+          <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+          </a>
+        </div>
+        <div class="menu-inner-shadow"></div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item">
+            <a href="index.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <div data-i18n="Analytics">Dashboard</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="tenants-list.html" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-user"></i>
+              <div data-i18n="Account Settings">Tenants</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+              <i class="menu-icon tf-icons bx bx-dollar-circle"></i>
+              <div data-i18n="Misc">Payments</div>
+            </a>
+            <ul class="menu-sub">
+              <li class="menu-item">
+                <a href="payments-all.html" class="menu-link">
+                  <div data-i18n="Error">Payment History</div>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </aside>
+
+      <div class="layout-page">
+        <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+          <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+              <i class="bx bx-menu bx-sm"></i>
+            </a>
+          </div>
+          <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+            <div class="navbar-nav align-items-center">
+              <div class="nav-item d-flex align-items-center">
+                <i class="bx bx-search fs-4 lh-0"></i>
+                <input type="text" class="form-control border-0 shadow-none" placeholder="Search tenants..." id="searchInput" disabled />
+              </div>
+            </div>
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                  <div class="avatar avatar-online">
+                    <img src="../assets/img/avatars/1.png" alt="" class="w-px-40 h-auto rounded-circle" />
+                  </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <a class="dropdown-item" href="#" data-logout="">
+                      <i class="bx bx-power-off me-2"></i>
+                      <span class="align-middle">Log Out</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4">
+              <span class="text-muted fw-light">Management /</span> Compartments Allocation
+            </h4>
+
+            <div class="card mb-4">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Compartments & Tenants</h5>
+                <div class="d-flex gap-2">
+                  <a href="tenants-add.html" class="btn btn-sm btn-outline-primary">
+                    <i class="bx bx-user-plus me-1"></i> Add Tenant
+                  </a>
+                  <a href="index.html" class="btn btn-sm btn-primary">
+                    <i class="bx bx-home me-1"></i> Dashboard
+                  </a>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="alert alert-info">
+                  <i class="bx bx-info-circle me-2"></i>
+                  <strong>80 Fixed Compartments Available:</strong> Each compartment is pre-configured with 2 rooms and 1 bathroom. Manage tenant allocations and payments below.
+                </div>
+                <div class="mt-3" id="statusMessage"></div>
+                <!-- Toast Container -->
+                <div id="toastContainer" class="toast-container"></div>
+              </div>
+            </div>
+
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-md-4 mb-2 mb-md-0">
+                    <div class="fw-semibold text-muted">Total Compartments</div>
+                    <div class="fs-4" id="totalCompartmentsCount">0</div>
+                  </div>
+                  <div class="col-md-4 mb-2 mb-md-0">
+                    <div class="fw-semibold text-muted">Occupied</div>
+                    <div class="fs-4 text-success" id="occupiedCompartmentsCount">0</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="fw-semibold text-muted">Vacant</div>
+                    <div class="fs-4 text-secondary" id="vacantCompartmentsCount">0</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Summary Cards -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h5 class="mb-0">Monthly Payment Summary</h5>
+              </div>
+              <div class="card-body">
+                <div class="row g-3 text-center">
+                  <div class="col-md-2">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <h6 class="text-muted small mb-2">Paid</h6>
+                        <div class="fs-5 text-success fw-bold" id="paymentSummaryPaid">0</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <h6 class="text-muted small mb-2">Up to Date</h6>
+                        <div class="fs-5 text-info fw-bold" id="paymentSummaryUpToDate">0</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <h6 class="text-muted small mb-2">Due</h6>
+                        <div class="fs-5 text-warning fw-bold" id="paymentSummaryDue">0</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <h6 class="text-muted small mb-2">Overdue</h6>
+                        <div class="fs-5 text-danger fw-bold" id="paymentSummaryOverdue">0</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <h6 class="text-muted small mb-2">Partial</h6>
+                        <div class="fs-5 text-secondary fw-bold" id="paymentSummaryPartial">0</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <h6 class="text-muted small mb-2">Paid Advance</h6>
+                        <div class="fs-5 text-primary fw-bold" id="paymentSummaryAdvance">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">Compartments & Payment Tracking</h5>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Compartment #</th>
+                        <th>Tenant</th>
+                        <th>Rent Amount</th>
+                        <th>Payment Status</th>
+                        <th>Mark Paid</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="compartmentsTableBody">
+                      <tr>
+                        <td colspan="7" class="text-center text-muted">Load tenants and generate compartments to view allocation.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Recording Modal -->
+          <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Record Payment</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Tenant</label>
+                    <input type="text" class="form-control" id="paymentTenantName" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Compartment</label>
+                    <input type="text" class="form-control" id="paymentCompartmentNumber" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Expected Rent Amount</label>
+                    <input type="number" class="form-control" id="paymentExpectedAmount" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Amount Paid</label>
+                    <input type="number" class="form-control" id="paymentAmount" placeholder="Enter amount paid">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Payment Method</label>
+                    <select class="form-select" id="paymentMethod">
+                      <option value="bank_transfer">Bank Transfer</option>
+                      <option value="cash">Cash</option>
+                      <option value="check">Check</option>
+                      <option value="credit_card">Credit Card</option>
+                      <option value="mobile_payment">Mobile Payment</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Payment Date</label>
+                    <input type="date" class="form-control" id="paymentDate">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-control" id="paymentNotes" rows="2" placeholder="Additional notes..."></textarea>
+                  </div>
+                  <div class="alert alert-info small" id="paymentAnalysis"></div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" id="recordPaymentBtn">
+                    <i class="bx bx-save me-1"></i> Record Payment & Generate Receipt
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Receipt Modal -->
+          <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Payment Receipt</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                  <div id="receiptContent" style="font-family: monospace; background: #f5f5f5; padding: 20px; border-radius: 5px;">
+                    <!-- Receipt content will be generated here -->
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-warning" id="printReceiptBtn">
+                    <i class="bx bx-printer me-1"></i> Print Receipt
+                  </button>
+                  <button type="button" class="btn btn-success" id="downloadReceiptBtn">
+                    <i class="bx bx-download me-1"></i> Download PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Assign Tenant Modal -->
+          <div class="modal fade" id="assignTenantModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Assign Tenant to Compartment</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Compartment</label>
+                    <input type="text" class="form-control" id="assignCompartmentInfo" readonly>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="assignTenantSelect" class="form-label">Select Tenant *</label>
+                    <select class="form-select" id="assignTenantSelect" required>
+                      <option value="">-- Choose a tenant --</option>
+                    </select>
+                  </div>
+                  
+                  <div id="selectedTenantInfo" class="alert alert-info" style="display: none;">
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Rent Amount (Fixed) *</label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input type="text" class="form-control" value="350" readonly>
+                      <span class="input-group-text">/month</span>
+                    </div>
+                    <small class="text-muted">All rooms are $350/month</small>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" id="confirmAssignTenantBtn">Assign Tenant</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+              <div class="mb-2 mb-md-0">
+                © <script>document.write(new Date().getFullYear());</script>, RentMS - Rent Management System
+              </div>
+            </div>
+          </footer>
+          <div class="content-backdrop fade"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout-overlay layout-menu-toggle"></div>
+  </div>
+
+  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+  <script src="../assets/vendor/libs/popper/popper.js"></script>
+  <script src="../assets/vendor/js/bootstrap.js"></script>
+  <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/api-service.js"></script>
+
+  <script>
+    (function () {
+      const API_BASE = 'http://localhost:5000/api';
+      
+      // Function to safely get elements (in case of timing issues)
+      const getElement = (id) => {
+        const el = document.getElementById(id);
+        if (!el) console.warn(`❌ Element not found: ${id}`);
+        return el;
+      };
+      
+      let statusMessage = getElement('statusMessage');
+      let tableBody = getElement('compartmentsTableBody');
+      let totalCompartmentsCount = getElement('totalCompartmentsCount');
+      let occupiedCompartmentsCount = getElement('occupiedCompartmentsCount');
+      let vacantCompartmentsCount = getElement('vacantCompartmentsCount');
+      
+      // Payment summary elements
+      let paymentSummaryPaid = getElement('paymentSummaryPaid');
+      let paymentSummaryUpToDate = getElement('paymentSummaryUpToDate');
+      let paymentSummaryDue = getElement('paymentSummaryDue');
+      let paymentSummaryOverdue = getElement('paymentSummaryOverdue');
+      let paymentSummaryPartial = getElement('paymentSummaryPartial');
+      let paymentSummaryAdvance = getElement('paymentSummaryAdvance');
+      
+      console.log('✅ Elements loaded:', {
+        totalCompartmentsCount: !!totalCompartmentsCount,
+        occupiedCompartmentsCount: !!occupiedCompartmentsCount,
+        vacantCompartmentsCount: !!vacantCompartmentsCount,
+        tableBody: !!tableBody,
+        statusMessage: !!statusMessage
+      });
+
+      let tenants = [];
+      let compartments = [];
+      let payments = [];
+      let rows = [];
+
+      const setStatus = (message, type = 'info') => {
+        if (!statusMessage) return;
+        const className = type === 'error' ? 'alert-danger'
+          : type === 'warning' ? 'alert-warning'
+          : type === 'success' ? 'alert-success'
+          : 'alert-info';
+        statusMessage.innerHTML = `<div class="alert ${className}">${message}</div>`;
+      };
+
+      const clearStatus = () => {
+        if (statusMessage) statusMessage.innerHTML = '';
+      };
+
+      // Toast notification system
+      const showToast = (message, type = 'info', duration = 4000) => {
+        const toastContainer = document.getElementById('toastContainer');
+        if (!toastContainer) return;
+        
+        const toastId = 'toast-' + Date.now();
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = `toast-notification ${type}`;
+        
+        const iconMap = {
+          success: 'bx-check-circle',
+          error: 'bx-x-circle',
+          warning: 'bx-alert-circle',
+          info: 'bx-info-circle'
+        };
+        
+        toast.innerHTML = `
+          <i class="bx ${iconMap[type] || 'bx-info-circle'}" style="font-size: 20px;"></i>
+          <span>${message}</span>
+          <span class="toast-close">&times;</span>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Close on click
+        toast.querySelector('.toast-close').addEventListener('click', () => {
+          toast.classList.add('removing');
+          setTimeout(() => toast.remove(), 300);
+        });
+        
+        // Auto remove after duration
+        setTimeout(() => {
+          if (toast.parentElement) {
+            toast.classList.add('removing');
+            setTimeout(() => toast.remove(), 300);
+          }
+        }, duration);
+      };
+
+      const updateSummaryCounts = (rowsToSummarize) => {
+        // Ensure we have fresh element references - always re-query
+        const total = rowsToSummarize.length;
+        const occupied = rowsToSummarize.filter(row => 
+          row.tenant && (row.tenant._id || row.tenant.id || row.tenant.firstName || row.tenant.name)
+        ).length;
+        const vacant = total - occupied;
+        
+        console.log(`📊 updateSummaryCounts called. Total: ${total}, Occupied: ${occupied}, Vacant: ${vacant}`);
+        
+        // Always query fresh - don't use cached references
+        const elTotal = document.getElementById('totalCompartmentsCount');
+        const elOccupied = document.getElementById('occupiedCompartmentsCount');
+        const elVacant = document.getElementById('vacantCompartmentsCount');
+        
+        console.log('Found elements:', {
+          total: !!elTotal,
+          occupied: !!elOccupied,
+          vacant: !!elVacant
+        });
+        
+        if (elTotal) {
+          elTotal.textContent = total.toString();
+          elTotal.innerHTML = total.toString();
+          console.log(`✅ Set Total Count to: ${total}`);
+        } else {
+          console.warn('❌ totalCompartmentsCount element not found!');
+        }
+        
+        if (elOccupied) {
+          elOccupied.textContent = occupied.toString();
+          elOccupied.innerHTML = occupied.toString();
+          console.log(`✅ Set Occupied Count to: ${occupied}`);
+        } else {
+          console.warn('❌ occupiedCompartmentsCount element not found!');
+        }
+        
+        if (elVacant) {
+          elVacant.textContent = vacant.toString();
+          elVacant.innerHTML = vacant.toString();
+          console.log(`✅ Set Vacant Count to: ${vacant}`);
+        } else {
+          console.warn('❌ vacantCompartmentsCount element not found!');
+        }
+      };
+
+      const updatePaymentSummary = async () => {
+        try {
+          const res = await fetch(`${API_BASE}/payments/summary/monthly`);
+          if (!res.ok) throw new Error('Failed to fetch payment summary');
+          
+          const data = await res.json();
+          const summary = data.data || {};
+          
+          if (paymentSummaryPaid) paymentSummaryPaid.textContent = summary.paid || 0;
+          if (paymentSummaryUpToDate) paymentSummaryUpToDate.textContent = summary.upToDate || 0;
+          if (paymentSummaryDue) paymentSummaryDue.textContent = summary.due || 0;
+          if (paymentSummaryOverdue) paymentSummaryOverdue.textContent = summary.overdue || 0;
+          if (paymentSummaryPartial) paymentSummaryPartial.textContent = summary.partial || 0;
+          if (paymentSummaryAdvance) paymentSummaryAdvance.textContent = summary.paidInAdvance || 0;
+        } catch (error) {
+          console.warn('Could not update payment summary:', error);
+        }
+      };
+
+      const getPaymentStatus = async (tenantId) => {
+        try {
+          const res = await fetch(`${API_BASE}/payments/monthly-status/${tenantId}`);
+          if (!res.ok) return { status: 'unknown', message: 'N/A' };
+          
+          const data = await res.json();
+          return data.data || { status: 'unknown', message: 'N/A' };
+        } catch (error) {
+          return { status: 'unknown', message: 'N/A' };
+        }
+      };
+
+      const getPaymentStatusBadge = (status) => {
+        const badges = {
+          'up-to-date': '<span class="badge bg-label-success">Up to Date</span>',
+          'due': '<span class="badge bg-label-warning">Due</span>',
+          'overdue': '<span class="badge bg-label-danger">Overdue</span>',
+          'paid-in-advance': '<span class="badge bg-label-info">Paid in Advance</span>',
+          'partial': '<span class="badge bg-label-secondary">Partial</span>',
+          'unknown': '<span class="badge bg-label-secondary">N/A</span>'
+        };
+        return badges[status] || badges['unknown'];
+      };
+
+      const setAssignedStatusFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        const assigned = params.get('assigned');
+        if (assigned) {
+          setStatus(`Tenant saved for compartment ${assigned}.`, 'success');
+          params.delete('assigned');
+          const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`;
+          window.history.replaceState({}, '', newUrl);
+        }
+      };
+
+      const getTenantLabel = (tenant) => {
+        if (!tenant) return '—';
+        // Handle both formats: firstName/lastName or name
+        if (tenant.firstName || tenant.lastName) {
+          const firstName = tenant.firstName || '';
+          const lastName = tenant.lastName || '';
+          const fullName = `${firstName} ${lastName}`.trim();
+          return fullName || tenant.name || tenant.email || tenant.phone || 'Unnamed Tenant';
+        }
+        return tenant.name || tenant.email || tenant.phone || 'Unnamed Tenant';
+      };
+
+      const getTenantContact = (tenant) => {
+        if (!tenant) return '—';
+        return tenant.email || tenant.phone || 'N/A';
+      };
+
+      const renderTable = (rowsToRender) => {
+        if (!tableBody) return;
+        if (!rowsToRender.length) {
+          tableBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No compartments generated or load from database.</td></tr>';
+          if (saveBtn) saveBtn.disabled = true;
+          updateSummaryCounts([]);
+          return;
+        }
+
+        // Get all occupied compartments for validation
+        const occupiedCompartments = new Set(
+          rowsToRender.filter(r => r.tenant).map(r => r.tenant._id || r.tenant.id)
+        );
+
+        // Filter out tenants who are already assigned to compartments
+        const tenantOptions = tenants
+          .filter(tenant => !tenant.compartment && !tenant.compartmentNumber)
+          .map((tenant) => {
+            const tenantId = tenant._id || tenant.id || '';
+            return `<option value="${tenantId}">${getTenantLabel(tenant)}</option>`;
+          })
+          .join('');
+
+        tableBody.innerHTML = rowsToRender
+          .map((row) => {
+            const tenantId = row.tenant ? (row.tenant._id || row.tenant.id || '') : '';
+            const hasTenant = row.tenant && (row.tenant._id || row.tenant.id || row.tenant.firstName || row.tenant.name);
+            const rentAmount = hasTenant ? (row.tenant?.rentAmount || row.tenant?.rent || row.rentAmount || 0) : (row.rentAmount || 0);
+            const paymentStatus = row.paymentStatus || 'unknown';
+            const compartmentNumber = row.compartmentNumber || row.number;
+            
+            // Show occupancy badge - only mark as occupied if tenant exists
+            const occupancyBadge = hasTenant
+              ? '<span class="badge bg-label-success ms-2">Occupied</span>' 
+              : '<span class="badge bg-label-secondary ms-2">Vacant</span>';
+            
+            return `
+              <tr ${hasTenant ? 'class="table-active"' : ''}>
+                <td><strong>${compartmentNumber}</strong>${occupancyBadge}</td>
+                <td>${getTenantLabel(row.tenant)}</td>
+                <td>${rentAmount > 0 ? `$${rentAmount}` : 'N/A'}</td>
+                <td id="payStatus-${tenantId || compartmentNumber}">${getPaymentStatusBadge(paymentStatus)}</td>
+                <td>
+                  ${hasTenant ? `<button class="btn btn-sm btn-info" data-action="recordPayment" data-compartment="${compartmentNumber}">
+                    <i class="bx bx-check me-1"></i> Mark Paid
+                  </button>` : '-'}
+                </td>
+                <td>${getTenantContact(row.tenant)}</td>
+                <td>
+                  ${hasTenant ? `<button class="btn btn-sm btn-outline-danger" type="button" data-action="terminate" data-compartment="${compartmentNumber}">
+                    <i class="bx bx-user-minus me-1"></i> Remove Tenant
+                  </button>` : `<button class="btn btn-sm btn-outline-primary" data-action="assignTenant" data-compartment="${compartmentNumber}">
+                    <i class="bx bx-user-plus me-1"></i> Assign Tenant
+                  </button>`}
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+
+        rowsToRender.forEach((row) => {
+          const select = tableBody.querySelector(`select[data-compartment="${row.number || row.compartmentNumber}"]`);
+          if (select) {
+            select.value = row.tenant ? (row.tenant._id || row.tenant.id || '') : '';
+          }
+        });
+
+        if (saveBtn) saveBtn.disabled = false;
+        updateSummaryCounts(rowsToRender);
+        
+        // Load payment statuses for all tenants (wait for all to complete)
+        Promise.all(rowsToRender.map(async (row) => {
+          if (row.tenant && row.tenant._id) {
+            try {
+              const status = await getPaymentStatus(row.tenant._id || row.tenant.id);
+              row.paymentStatus = status.status;
+              const el = document.getElementById(`payStatus-${row.tenant._id || row.tenant.id}`);
+              if (el) {
+                el.innerHTML = getPaymentStatusBadge(status.status);
+              }
+            } catch (err) {
+              console.error('Failed to load payment status:', err);
+            }
+          }
+        }));
+      };
+
+      const openPaymentModal = async (compartment) => {
+        const row = rows.find(r => (r.number === compartment || r.compartmentNumber === compartment));
+        if (!row || !row.tenant) {
+          setStatus('No tenant assigned to this compartment', 'warning');
+          return;
+        }
+
+        const tenant = row.tenant;
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        
+        // Set form fields
+        document.getElementById('paymentTenantName').value = getTenantLabel(tenant);
+        document.getElementById('paymentCompartmentNumber').value = compartment;
+        document.getElementById('paymentExpectedAmount').value = tenant.rentAmount || 0;
+        document.getElementById('paymentAmount').value = tenant.rentAmount || 0;
+        document.getElementById('paymentDate').valueAsDate = new Date();
+        document.getElementById('paymentNotes').value = '';
+        
+        // Store for later use
+        paymentModal._tenantId = tenant._id || tenant.id;
+        paymentModal._compartmentId = row.id;
+        paymentModal._rentAmount = tenant.rentAmount || 0;
+        paymentModal._tenantData = tenant; // Store full tenant object
+        paymentModal._compartmentNumber = row.compartmentNumber; // Store compartment number
+        
+        paymentModal.show();
+      };
+
+      const analyzePayment = (paid, expected) => {
+        const difference = paid - expected;
+        let message = '';
+        let alertClass = '';
+        
+        if (difference > 0) {
+          message = `<strong class="text-success">Paid in Advance:</strong> $<span style="color: #28a745; font-weight: bold;">${difference.toFixed(2)}</span> will be credited to next month`;
+          alertClass = 'alert-success';
+        } else if (difference < 0) {
+          message = `<strong class="text-warning">Partial Payment:</strong> $<span style="color: #ff9800; font-weight: bold;">${Math.abs(difference).toFixed(2)}</span> still due`;
+          alertClass = 'alert-warning';
+        } else {
+          message = `<strong class="text-success">Full Payment:</strong> <span style="color: #28a745; font-weight: bold;">Sufficient Balance</span> - Rent paid in full`;
+          alertClass = 'alert-success';
+        }
+        
+        return { message, alertClass };
+      };
+
+
+
+      const generateReceipt = (payment) => {
+        const tenant = payment.tenantId || payment.tenant || {};
+        const compartment = payment.compartmentId || payment.compartment || {};
+        const receiptNumber = `RCP-${payment._id.toString().slice(-8).toUpperCase()}`;
+        const date = new Date(payment.paidDate || payment.createdAt).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        const amount = payment.amount;
+        const expected = tenant.rentAmount || payment.amount;
+        const difference = amount - expected;
+        
+        let analysis = '';
+        let analysisColor = '';
+        if (difference > 0) {
+          analysis = `Paid in Advance: $${difference.toFixed(2)} will be credited to next month`;
+          analysisColor = '#28a745';
+        } else if (difference < 0) {
+          analysis = `Partial Payment: $${Math.abs(difference).toFixed(2)} still due`;
+          analysisColor = '#ff9800';
+        } else {
+          analysis = `Full Payment Received - Rent Paid in Full`;
+          analysisColor = '#28a745';
+        }
+
+        return `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>Payment Receipt - ${receiptNumber}</title>
+            <style>
+              @media print {
+                body { margin: 0; padding: 20px; }
+                .no-print { display: none; }
+              }
+              body {
+                font-family: 'Arial', 'Helvetica', sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+              }
+              .receipt-container {
+                border: 2px solid #333;
+                padding: 30px;
+                background: white;
+              }
+              .receipt-header {
+                text-align: center;
+                border-bottom: 3px solid #333;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+              }
+              .receipt-header h1 {
+                margin: 0 0 10px 0;
+                font-size: 32px;
+                color: #333;
+                letter-spacing: 2px;
+              }
+              .receipt-header p {
+                margin: 5px 0;
+                color: #666;
+                font-size: 14px;
+              }
+              .receipt-number {
+                background: #f5f5f5;
+                padding: 10px;
+                text-align: center;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 20px;
+                border-left: 4px solid #696cff;
+              }
+              .info-table {
+                width: 100%;
+                margin-bottom: 25px;
+                border-collapse: collapse;
+              }
+              .info-table td {
+                padding: 8px 10px;
+                border-bottom: 1px solid #eee;
+              }
+              .info-table td:first-child {
+                font-weight: bold;
+                width: 180px;
+                color: #555;
+              }
+              .amount-section {
+                background: #f9f9f9;
+                border: 2px solid #ddd;
+                padding: 25px;
+                margin: 25px 0;
+                text-align: center;
+              }
+              .amount-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 15px 0;
+                padding: 10px 20px;
+                background: white;
+                border-radius: 5px;
+              }
+              .amount-label {
+                font-size: 16px;
+                color: #666;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              }
+              .amount-value {
+                font-size: 24px;
+                font-weight: bold;
+              }
+              .expected-amount { color: #666; }
+              .paid-amount { color: #28a745; }
+              .analysis-box {
+                background: linear-gradient(135deg, #f5f5f5 0%, #e9ecef 100%);
+                border-left: 5px solid ${analysisColor};
+                padding: 20px;
+                margin: 25px 0;
+                border-radius: 5px;
+              }
+              .analysis-box strong {
+                display: block;
+                font-size: 18px;
+                color: ${analysisColor};
+                margin-bottom: 5px;
+              }
+              .payment-details {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 5px;
+                margin-top: 25px;
+              }
+              .payment-details p {
+                margin: 8px 0;
+                font-size: 14px;
+              }
+              .payment-details strong {
+                color: #28a745;
+                font-size: 16px;
+              }
+              .receipt-footer {
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 2px solid #ddd;
+                text-align: center;
+                color: #999;
+                font-size: 12px;
+              }
+              .signature-section {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 60px;
+                padding-top: 20px;
+              }
+              .signature-box {
+                text-align: center;
+                width: 45%;
+              }
+              .signature-line {
+                border-top: 2px solid #333;
+                margin-top: 40px;
+                padding-top: 10px;
+                font-size: 14px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="receipt-container">
+              <div class="receipt-header">
+                <h1>PAYMENT RECEIPT</h1>
+                <p>Rent Management System</p>
+                <p>Official Receipt of Payment</p>
+              </div>
+
+              <div class="receipt-number">
+                Receipt No: ${receiptNumber}
+              </div>
+
+              <table class="info-table">
+                <tr>
+                  <td>Date of Payment:</td>
+                  <td>${date}</td>
+                </tr>
+                <tr>
+                  <td>Tenant Name:</td>
+                  <td>${getTenantLabel(tenant)}</td>
+                </tr>
+                <tr>
+                  <td>Tenant Email:</td>
+                  <td>${tenant.email || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <td>Tenant Phone:</td>
+                  <td>${tenant.phone || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <td>Compartment Number:</td>
+                  <td><strong>${compartment.compartmentNumber || payment.compartmentNumber || 'N/A'}</strong></td>
+                </tr>
+                <tr>
+                  <td>Payment Method:</td>
+                  <td>${payment.paymentMethod || 'Bank Transfer'}</td>
+                </tr>
+                <tr>
+                  <td>Payment Type:</td>
+                  <td>${payment.type || 'Rent'}</td>
+                </tr>
+              </table>
+
+              <div class="amount-section">
+                <div class="amount-row">
+                  <span class="amount-label">Expected Rent Amount</span>
+                  <span class="amount-value expected-amount">$${expected.toFixed(2)}</span>
+                </div>
+                <div class="amount-row">
+                  <span class="amount-label">Amount Paid</span>
+                  <span class="amount-value paid-amount">$${amount.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div class="analysis-box">
+                <strong>Payment Status:</strong>
+                <p style="margin: 5px 0; font-size: 16px;">${analysis}</p>
+              </div>
+
+              <div class="payment-details">
+                <p style="text-align: center; font-size: 18px;">
+                  Status: <strong>PAID ✓</strong>
+                </p>
+                <p style="text-align: center; margin-top: 10px; color: #666;">
+                  This is a computer-generated receipt and serves as official proof of payment.
+                </p>
+              </div>
+
+              <div class="signature-section">
+                <div class="signature-box">
+                  <div class="signature-line">Tenant Signature</div>
+                </div>
+                <div class="signature-box">
+                  <div class="signature-line">Manager Signature</div>
+                </div>
+              </div>
+
+              <div class="receipt-footer">
+                <p>Thank you for your payment</p>
+                <p>For inquiries, please contact the management office</p>
+                <p style="margin-top: 15px;">© ${new Date().getFullYear()} RentMS - Rent Management System</p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `;
+      };
+
+      const loadCompartmentsFromDB = async () => {
+        try {
+          console.log('🔍 Fetching compartments from API...');
+          const response = await fetch(`${API_BASE}/compartments?limit=100`);
+          if (!response.ok) throw new Error('Failed to fetch compartments');
+          
+          const data = await response.json();
+          compartments = data.data || [];
+          console.log(`✅ Loaded ${compartments.length} compartments from database`);
+          
+          // Build rows from compartments - ensure tenant data is preserved
+          rows = compartments.map(comp => {
+            // Ensure we have proper tenant object with all fields
+            let tenantData = null;
+            if (comp.tenant) {
+              tenantData = {
+                _id: comp.tenant._id || comp.tenant.id,
+                id: comp.tenant._id || comp.tenant.id,
+                firstName: comp.tenant.firstName || '',
+                lastName: comp.tenant.lastName || '',
+                name: comp.tenant.name || `${comp.tenant.firstName || ''} ${comp.tenant.lastName || ''}`.trim(),
+                email: comp.tenant.email,
+                phone: comp.tenant.phone,
+                leaseStart: comp.tenant.leaseStart,
+                leaseEnd: comp.tenant.leaseEnd,
+                compartment: comp.tenant.compartment,
+                compartmentNumber: comp.tenant.compartmentNumber || comp.compartmentNumber,
+                rentAmount: comp.tenant.rentAmount || comp.tenant.rent
+              };
+            }
+            
+            return {
+              id: comp._id,
+              number: parseInt(comp.compartmentNumber.replace('C', '')) || 0,
+              compartmentNumber: comp.compartmentNumber,
+              tenant: tenantData,
+              status: comp.status,
+              rentAmount: comp.rentAmount,
+              paymentStatus: 'unknown'
+            };
+          });
+          
+          console.log(`🔨 Built ${rows.length} rows from compartments`);
+          
+          // Update count BEFORE rendering table
+          console.log('📊 Updating counts with', rows.length, 'rows');
+          const totalEl = document.getElementById('totalCompartmentsCount');
+          const occupiedEl = document.getElementById('occupiedCompartmentsCount');
+          const vacantEl = document.getElementById('vacantCompartmentsCount');
+          
+          if (totalEl) {
+            totalEl.textContent = rows.length.toString();
+            console.log('✅ Directly set totalCompartmentsCount to', rows.length);
+          }
+          
+          const occupied = rows.filter(r => r.tenant && (r.tenant._id || r.tenant.id || r.tenant.firstName || r.tenant.name)).length;
+          if (occupiedEl) {
+            occupiedEl.textContent = occupied.toString();
+            console.log('✅ Directly set occupiedCompartmentsCount to', occupied);
+          }
+          
+          const vacant = rows.length - occupied;
+          if (vacantEl) {
+            vacantEl.textContent = vacant.toString();
+            console.log('✅ Directly set vacantCompartmentsCount to', vacant);
+          }
+          
+          // Then render the table
+          renderTable(rows);
+          
+          // Force update of counts with the loaded data
+          console.log('🔄 Forcing count update via updateSummaryCounts...');
+          updateSummaryCounts(rows);
+          
+          updatePaymentSummary();
+          setStatus(`✅ Loaded ${compartments.length} compartment(s) from database.`, 'success');
+        } catch (error) {
+          console.error('❌ Failed to load compartments from DB:', error);
+          setStatus('No compartments in database. Generate new ones.', 'info');
+        }
+      };
+
+      const clearAll = () => {
+        rows = [];
+        renderTable([]);
+        clearStatus();
+        localStorage.removeItem('compartmentsAllocation');
+        updateSummaryCounts([]);
+      };
+
+      const loadSavedCompartments = () => {
+        let saved = [];
+        try {
+          saved = JSON.parse(localStorage.getItem('compartmentsAllocation') || '[]');
+        } catch (error) {
+          saved = [];
+        }
+
+        if (!Array.isArray(saved) || !saved.length) return false;
+
+        rows = saved.map((item) => {
+          const tenant = tenants.find((t) => (t._id || t.id) === item.tenantId) || (item.tenantId ? {
+            _id: item.tenantId,
+            name: item.tenantName,
+            email: item.tenantEmail,
+            phone: item.tenantPhone
+          } : null);
+          return {
+            number: item.number,
+            tenant
+          };
+        });
+
+        renderTable(rows);
+        setStatus(`Loaded ${rows.length} saved compartment(s).`, 'success');
+        return true;
+      };
+
+      const loadTenants = async () => {
+        console.log('🔄 Starting loadTenants()...');
+        setStatus('Loading compartments and tenants...', 'info');
+        try {
+          // Load tenants first
+          const res = await fetch(`${API_BASE}/tenants`);
+          if (!res.ok) throw new Error('Failed to fetch tenants');
+          
+          const data = await res.json();
+          tenants = data.data || data || [];
+          console.log(`👥 Loaded ${tenants.length} tenants`);
+          
+          try {
+            localStorage.setItem('tenantsCache', JSON.stringify(tenants));
+          } catch (storageError) {
+            console.warn('Unable to cache tenants:', storageError);
+          }
+          
+          // Then load compartments from database
+          await loadCompartmentsFromDB();
+          updatePaymentSummary();
+          setAssignedStatusFromUrl();
+        } catch (error) {
+          console.error('Failed to load tenants:', error);
+          
+          let cachedTenants = [];
+          try {
+            cachedTenants = JSON.parse(localStorage.getItem('tenantsCache') || '[]');
+          } catch (parseError) {
+            cachedTenants = [];
+          }
+
+          if (cachedTenants.length > 0) {
+            tenants = cachedTenants;
+            setStatus(`Backend is offline. Loaded ${tenants.length} cached tenant(s).`, 'warning');
+            loadSavedCompartments();
+            return;
+          }
+
+          tenants = [
+            { _id: 't-001', firstName: 'John', lastName: 'Doe', email: 'john.doe@email.com', phone: '555-0101' },
+            { _id: 't-002', firstName: 'Mary', lastName: 'Johnson', email: 'mary.johnson@email.com', phone: '555-0102' },
+            { _id: 't-003', firstName: 'Samuel', lastName: 'Clark', email: 'samuel.clark@email.com', phone: '555-0103' }
+          ];
+          setStatus(`Backend is offline. Loaded ${tenants.length} sample tenant(s).`, 'warning');
+          loadSavedCompartments();
+          setAssignedStatusFromUrl();
+        }
+      };
+
+      tableBody.addEventListener('change', async (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLSelectElement)) return;
+        const compartmentNumber = target.getAttribute('data-compartment') || '';
+        if (!compartmentNumber) return;
+        
+        const selectedId = target.value || '';
+        const selectedTenant = tenants.find((t) => (t._id || t.id) === selectedId) || null;
+        
+        // Check if tenant is already assigned to another compartment
+        if (selectedTenant) {
+          const alreadyAssigned = rows.find((row) => {
+            const currentCompartment = row.number || row.compartmentNumber;
+            const hasTenant = row.tenant && (row.tenant._id === selectedId || row.tenant.id === selectedId);
+            return hasTenant && currentCompartment !== compartmentNumber;
+          });
+          
+          if (alreadyAssigned) {
+            showToast(`This tenant is already assigned to compartment ${alreadyAssigned.number || alreadyAssigned.compartmentNumber}`, 'warning', 5000);
+            target.value = ''; // Reset selection
+            return;
+          }
+        }
+        
+        // Update local rows
+        rows = rows.map((row) =>
+          (row.number === compartmentNumber || row.compartmentNumber === compartmentNumber)
+            ? { ...row, tenant: selectedTenant }
+            : row
+        );
+
+        // If we have a compartment ID, update in DB
+        const comp = compartments.find(c => c.compartmentNumber === compartmentNumber || c.compartmentNumber === `C${String(compartmentNumber).padStart(3, '0')}`);
+        if (comp) {
+          try {
+            const response = await fetch(`${API_BASE}/compartments/${comp._id}/assign-tenant`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tenantId: selectedId || null })
+            });
+            
+            if (!response.ok) {
+              const error = await response.json();
+              showToast(error.message || 'Failed to assign tenant', 'error');
+              // Revert the change
+              renderTable(rows);
+              return;
+            }
+            
+            showToast(selectedTenant ? `✓ Tenant assigned to compartment ${compartmentNumber}` : `✓ Tenant removed from compartment ${compartmentNumber}`, 'success');
+          } catch (error) {
+            console.error('Failed to update compartment:', error);
+            showToast('Network error. Changes may not be saved.', 'error');
+          }
+        }
+
+        renderTable(rows);
+        updatePaymentSummary();
+      });
+
+      tableBody.addEventListener('click', async (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        const action = target.getAttribute('data-action');
+        const compartmentValue = target.getAttribute('data-compartment');
+        if (!action || !compartmentValue) return;
+
+        if (action === 'recordPayment') {
+          event.preventDefault();
+          await openPaymentModal(compartmentValue);
+          return;
+        }
+
+        if (action === 'assignTenant') {
+          event.preventDefault();
+          await openAssignTenantModal(compartmentValue);
+          return;
+        }
+
+        if (action === 'terminate') {
+          const row = rows.find(r => r.number === compartmentValue || r.compartmentNumber === compartmentValue);
+          if (!row || !row.tenant) return;
+          
+          const tenantName = row.tenant.firstName ? `${row.tenant.firstName} ${row.tenant.lastName}` : row.tenant.name || 'this tenant';
+          const confirmTerminate = confirm(`Remove ${tenantName} from compartment ${compartmentValue}?`);
+          if (!confirmTerminate) return;
+          
+          // Find compartment in DB
+          const comp = compartments.find(c => c.compartmentNumber === compartmentValue);
+          if (comp) {
+            try {
+              showToast('Removing tenant...', 'info', 2000);
+              const response = await fetch(`${API_BASE}/compartments/${comp._id}/remove-tenant`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+              });
+              
+              if (!response.ok) {
+                throw new Error('Failed to remove tenant from database');
+              }
+              
+              // Reload compartments from database
+              await loadCompartmentsFromDB();
+              showToast(`✓ Tenant removed from compartment ${compartmentValue}`, 'success');
+              updatePaymentSummary();
+            } catch (error) {
+              console.error('Failed to remove tenant:', error);
+              showToast('Error removing tenant: ' + error.message, 'error');
+            }
+          } else {
+            // If not in DB, just update local rows
+            rows = rows.map(r => (r.number === compartmentValue || r.compartmentNumber === compartmentValue) ? { ...r, tenant: null } : r);
+            renderTable(rows);
+            showToast(`✓ Tenant removed from compartment ${compartmentValue}`, 'success');
+            updatePaymentSummary();
+          }
+          return;
+        }
+      });
+
+      // Payment Modal Handler
+      let currentPaymentId = null;
+      let currentPaymentData = null;
+      
+      document.getElementById('recordPaymentBtn').addEventListener('click', async () => {
+        const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+        const tenantId = paymentModal._tenantId;
+        const compartmentId = paymentModal._compartmentId;
+        const tenantData = paymentModal._tenantData;
+        const compartmentNumber = paymentModal._compartmentNumber;
+        const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+        const method = document.getElementById('paymentMethod').value;
+        const date = document.getElementById('paymentDate').value;
+        const notes = document.getElementById('paymentNotes').value;
+
+        if (!amount || amount <= 0) {
+          showToast('Please enter a valid payment amount', 'warning');
+          return;
+        }
+
+        try {
+          showToast('Recording payment...', 'info', 2000);
+          
+          // Create payment record
+          const paymentRes = await fetch(`${API_BASE}/payments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tenantId: tenantId,
+              compartmentId: compartmentId,
+              amount,
+              dueDate: new Date(),
+              paymentMethod: method,
+              type: 'rent',
+              notes: notes
+            })
+          });
+
+          if (!paymentRes.ok) {
+            const error = await paymentRes.json();
+            throw new Error(error.error || 'Failed to create payment');
+          }
+          
+          const paymentResponse = await paymentRes.json();
+          const payment = paymentResponse.data || paymentResponse;
+          const paymentId = payment._id;
+          currentPaymentId = paymentId;
+
+          // Mark as paid and generate receipt
+          const markRes = await fetch(`${API_BASE}/payments/${paymentId}/mark-paid`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              paidDate: date || new Date(),
+              paymentMethod: method,
+              amount
+            })
+          });
+
+          if (!markRes.ok) {
+            const error = await markRes.json();
+            throw new Error(error.error || 'Failed to mark payment as paid');
+          }
+          
+          const markResponse = await markRes.json();
+          let paidPayment = markResponse.data || markResponse;
+          
+          // Enrich payment object with tenant and compartment data for receipt generation
+          if (!paidPayment.tenantId || typeof paidPayment.tenantId === 'string') {
+            paidPayment.tenantId = tenantData;
+          }
+          if (!paidPayment.compartmentId || typeof paidPayment.compartmentId === 'string') {
+            paidPayment.compartmentId = { compartmentNumber: compartmentNumber };
+          }
+          
+          currentPaymentData = paidPayment;
+
+          // Show receipt
+          const receiptContent = generateReceipt(paidPayment);
+          document.getElementById('receiptContent').innerHTML = receiptContent;
+          const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+          
+          paymentModal.hide();
+          
+          // Small delay before showing receipt
+          setTimeout(() => {
+            receiptModal.show();
+            showToast('✓ Payment recorded successfully!', 'success');
+          }, 300);
+          
+          // Update data after showing receipt
+          setTimeout(() => {
+            updatePaymentSummary();
+            loadCompartmentsFromDB();
+          }, 1500);
+          
+        } catch (error) {
+          console.error('Error recording payment:', error);
+          showToast(`Error: ${error.message}`, 'error', 5000);
+        }
+      });
+
+      // Download receipt
+      document.addEventListener('click', async (e) => {
+        if (e.target.id === 'downloadReceiptBtn') {
+          if (!currentPaymentId) {
+            showToast('No payment record found', 'error');
+            return;
+          }
+          
+          try {
+            showToast('Preparing PDF...', 'info', 2000);
+            
+            // Fetch the PDF receipt
+            const response = await fetch(`${API_BASE}/payments/${currentPaymentId}/receipt`);
+            if (!response.ok) throw new Error('Failed to fetch receipt PDF');
+            
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `receipt_${currentPaymentId.slice(-8)}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            
+            showToast('✓ Receipt downloaded successfully!', 'success');
+          } catch (error) {
+            console.error('Error downloading receipt:', error);
+            showToast(`Download error: ${error.message}`, 'error');
+          }
+        }
+      });
+
+      document.getElementById('printReceiptBtn').addEventListener('click', () => {
+        const content = document.getElementById('receiptContent').innerHTML;
+        const printWindow = window.open('', '', 'width=800,height=600');
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Print Receipt</title>
+            <style>
+              @media print {
+                body { margin: 0; padding: 0; }
+              }
+              body { font-family: Arial, sans-serif; }
+            </style>
+          </head>
+          <body>${content}</body>
+          </html>
+        `);
+        printWindow.document.close();
+        setTimeout(() => {
+          printWindow.print();
+          showToast('✓ Receipt printed successfully!', 'success');
+        }, 250);
+      });
+
+      // Real-time payment analysis for payment modal
+      document.getElementById('paymentAmount').addEventListener('input', () => {
+        const paid = parseFloat(document.getElementById('paymentAmount').value) || 0;
+        const expected = parseFloat(document.getElementById('paymentExpectedAmount').value) || 0;
+        
+        if (paid > 0) {
+          const analysis = analyzePayment(paid, expected);
+          const analysisEl = document.getElementById('paymentAnalysis');
+          analysisEl.className = `alert ${analysis.alertClass} small`;
+          analysisEl.innerHTML = analysis.message;
+        }
+      });
+
+      // Assign Tenant Modal Handler
+      const openAssignTenantModal = async (compartmentNumber) => {
+        const comp = compartments.find(c => c.compartmentNumber === compartmentNumber || c.compartmentNumber === `C${String(compartmentNumber).padStart(3, '0')}`);
+        if (!comp) {
+          setStatus('Compartment not found', 'error');
+          return;
+        }
+
+        // Show compartment info
+        document.getElementById('assignCompartmentInfo').value = `${comp.compartmentNumber} - $${comp.rentAmount}`;
+
+        // Load all available tenants
+        try {
+          const response = await fetch(`${API_BASE}/tenants?limit=1000`);
+          if (!response.ok) throw new Error('Failed to load tenants');
+
+          const data = await response.json();
+          const allTenants = Array.isArray(data) ? data : (data.data || []);
+
+          // Filter out tenants who are already assigned to compartments
+          const availableTenants = allTenants.filter(tenant => {
+            // Exclude tenants that have a compartment or compartmentNumber assigned
+            return !tenant.compartment && !tenant.compartmentNumber;
+          });
+
+          const select = document.getElementById('assignTenantSelect');
+          select.innerHTML = '<option value="">-- Choose a tenant --</option>';
+          
+          if (availableTenants.length === 0) {
+            select.innerHTML = '<option value="">-- No available tenants --</option>';
+            const infoDiv = document.getElementById('selectedTenantInfo');
+            infoDiv.innerHTML = '<div class="alert alert-warning"><i class="bx bx-info-circle me-1"></i> All tenants are currently assigned to compartments.</div>';
+            infoDiv.style.display = 'block';
+            return;
+          }
+
+          availableTenants.forEach(tenant => {
+            const option = document.createElement('option');
+            option.value = tenant._id || tenant.id;
+            option.setAttribute('data-tenant', JSON.stringify(tenant));
+            const name = tenant.name || `${tenant.firstName || ''} ${tenant.lastName || ''}`.trim() || 'Unknown';
+            option.textContent = `${name} - ${tenant.email || tenant.phone || 'No contact'}`;
+            select.appendChild(option);
+          });
+
+          // Add change listener to show tenant details
+          select.addEventListener('change', (e) => {
+            const selectedIndex = e.target.selectedIndex;
+            if (selectedIndex > 0) {
+              const selectedOption = e.target.options[selectedIndex];
+              const tenant = JSON.parse(selectedOption.getAttribute('data-tenant'));
+              const infoDiv = document.getElementById('selectedTenantInfo');
+              infoDiv.innerHTML = `
+                <strong>Tenant Details:</strong><br>
+                Name: ${tenant.name || `${tenant.firstName || ''} ${tenant.lastName || ''}`.trim()}<br>
+                Email: ${tenant.email || 'N/A'}<br>
+                Phone: ${tenant.phone || 'N/A'}<br>
+                Rent Amount: $${tenant.rent || tenant.rentAmount || 0}
+              `;
+              infoDiv.style.display = 'block';
+            } else {
+              document.getElementById('selectedTenantInfo').style.display = 'none';
+            }
+          });
+
+          // Store current compartment ID for confirmation
+          document.getElementById('confirmAssignTenantBtn').onclick = async () => {
+            await confirmAssignTenant(comp._id);
+          };
+
+          const modal = new bootstrap.Modal(document.getElementById('assignTenantModal'));
+          modal.show();
+        } catch (error) {
+          console.error('Error loading tenants:', error);
+          setStatus('Failed to load tenants', 'error');
+        }
+      };
+
+      const confirmAssignTenant = async (compartmentId) => {
+        try {
+          const tenantId = document.getElementById('assignTenantSelect').value;
+          if (!tenantId) {
+            alert('Please select a tenant');
+            return;
+          }
+
+          // Get selected tenant for validation
+          const selectedTenant = tenants.find(t => (t._id || t.id) === tenantId);
+          if (!selectedTenant) {
+            setStatus('Selected tenant not found', 'error');
+            return;
+          }
+
+          // Check if tenant is already assigned to another compartment
+          if (selectedTenant.compartment || selectedTenant.compartmentNumber) {
+            const currentCompartment = selectedTenant.compartmentNumber || selectedTenant.compartment;
+            const confirmMove = confirm(
+              `This tenant (${selectedTenant.firstName} ${selectedTenant.lastName}) is currently assigned to compartment ${currentCompartment}.\n\nDo you want to move them to the new compartment?`
+            );
+            if (!confirmMove) {
+              setStatus('Assignment cancelled. Tenant not moved.', 'warning');
+              return;
+            }
+          }
+
+          // All compartments have fixed $350 rent - no need to adjust
+          const payload = { tenantId };
+
+          // Assign tenant to compartment
+          const response = await fetch(`${API_BASE}/compartments/${compartmentId}/assign-tenant`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            // Handle specific error messages from backend
+            const errorMessage = error.message || 'Failed to assign tenant';
+            
+            // Check if error is about tenant already being assigned
+            if (errorMessage.includes('already assigned to compartment')) {
+              setStatus(`❌ ${errorMessage}. This tenant cannot be assigned to multiple compartments.`, 'error');
+            } else if (errorMessage.includes('already occupied')) {
+              setStatus(`❌ ${errorMessage}. Please remove the current tenant first.`, 'error');
+            } else {
+              setStatus(`Error: ${errorMessage}`, 'error');
+            }
+            return;
+          }
+
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('assignTenantModal'));
+          modal.hide();
+
+          // Reload compartments
+          await loadCompartmentsFromDB();
+
+          // Show success message
+          setStatus('✅ Tenant assigned to compartment successfully! (Rent: $350/month)', 'success');
+        } catch (error) {
+          console.error('Error assigning tenant:', error);
+          setStatus('Error: ' + error.message, 'error');
+        }
+      };
+
+      loadTenants();
+      
+      // Expose debug function to browser console
+      window.debugCounts = function() {
+        const el1 = document.getElementById('totalCompartmentsCount');
+        const el2 = document.getElementById('occupiedCompartmentsCount');
+        const el3 = document.getElementById('vacantCompartmentsCount');
+        
+        console.log('🔍 Debug Counts:');
+        console.log('  totalCompartmentsCount element:', el1, 'value:', el1?.textContent);
+        console.log('  occupiedCompartmentsCount element:', el2, 'value:', el2?.textContent);
+        console.log('  vacantCompartmentsCount element:', el3, 'value:', el3?.textContent);
+        console.log('  rows loaded:', rows.length);
+        console.log('  compartments loaded:', compartments.length);
+        
+        // Force update
+        console.log('Forcing update with rows:', rows.length);
+        updateSummaryCounts(rows);
+      };
+      
+      // Also run it after a short delay to ensure everything is settled
+      setTimeout(() => {
+        console.log('🔄 Running delayed initial load check...');
+        window.debugCounts();
+      }, 1000);
+      
+          // Ensure counts are visible and correct - update every 2 seconds as failsafe
+          window.ensureCountsVisible = function() {
+            const total = document.getElementById('totalCompartmentsCount');
+            const occupied = document.getElementById('occupiedCompartmentsCount');
+            const vacant = document.getElementById('vacantCompartmentsCount');
+        
+            if (total && total.textContent === '0' && rows.length > 0) {
+              console.warn('⚠️  Counts showing 0 but we have', rows.length, 'rows. Forcing update...');
+              updateSummaryCounts(rows);
+            }
+          };
+      
+          setInterval(() => {
+            window.ensureCountsVisible();
+          }, 2000);
+    })();
+  </script>
+  
+  <!-- System Status Widget -->
+  <script>
+    fetch('system-status-widget.html')
+      .then(response => response.text())
+      .then(html => {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        document.body.appendChild(div);
+      });
+  </script>
+</body>
+</html>

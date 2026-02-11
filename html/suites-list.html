@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../assets/" data-template="vertical-menu-template-free">
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-assets-path="../assets/" data-template="vertical-menu-template-free">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -36,12 +36,12 @@
           <li class="menu-item active open">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
               <i class="menu-icon tf-icons bx bx-building"></i>
-              <div data-i18n="Properties">Properties</div>
+              <div data-i18n="Apartments">Apartments</div>
             </a>
             <ul class="menu-sub">
               <li class="menu-item">
-                <a href="properties-list.html" class="menu-link">
-                  <div data-i18n="All Properties">All Properties</div>
+                <a href="Apartments-list.html" class="menu-link">
+                  <div data-i18n="All Apartments">All Apartments</div>
                 </a>
               </li>
               <li class="menu-item active">
@@ -50,8 +50,8 @@
                 </a>
               </li>
               <li class="menu-item">
-                <a href="properties-add.html" class="menu-link">
-                  <div data-i18n="Add Property">Add Property</div>
+                <a href="Apartments-add.html" class="menu-link">
+                  <div data-i18n="Add Apartment">Add Apartment</div>
                 </a>
               </li>
             </ul>
@@ -70,14 +70,14 @@
               </button>
             </div>
 
-            <!-- Filter by Property -->
+            <!-- Filter by Apartment -->
             <div class="card mb-4">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-4">
-                    <label class="form-label">Filter by Property</label>
+                    <label class="form-label">Filter by Apartment</label>
                     <select id="propertyFilter" class="form-select">
-                      <option value="">All Properties</option>
+                      <option value="">All Apartments</option>
                     </select>
                   </div>
                   <div class="col-md-4">
@@ -105,7 +105,7 @@
                   <thead>
                     <tr>
                       <th>Suite Number</th>
-                      <th>Property</th>
+                      <th>Apartment</th>
                       <th>Floor</th>
                       <th>Rooms</th>
                       <th>Rent</th>
@@ -143,7 +143,7 @@
 
   <script>
     const suitesList = {
-      properties: [],
+      Apartments: [],
       suites: [],
       tenants: [],
 
@@ -165,7 +165,7 @@
           api.getTenants()
         ]);
         
-        this.properties = propertiesRes.data || [];
+        this.Apartments = propertiesRes.data || [];
         this.suites = suitesRes.data || [];
         this.tenants = tenantsRes.data || [];
         
@@ -174,12 +174,12 @@
 
       populatePropertyFilter() {
         const filter = document.getElementById('propertyFilter');
-        filter.innerHTML = '<option value="">All Properties</option>';
+        filter.innerHTML = '<option value="">All Apartments</option>';
         
-        this.properties.forEach(property => {
+        this.Apartments.forEach(Apartment => {
           const option = document.createElement('option');
-          option.value = property._id;
-          option.textContent = property.name;
+          option.value = Apartment._id;
+          option.textContent = Apartment.name;
           filter.appendChild(option);
         });
       },
@@ -206,8 +206,8 @@
         }
 
         tbody.innerHTML = filteredSuites.map(suite => {
-          const property = this.properties.find(p => p._id === suite.propertyId);
-          const propertyName = property ? property.name : 'Unknown';
+          const Apartment = this.Apartments.find(p => p._id === suite.propertyId);
+          const propertyName = Apartment ? Apartment.name : 'Unknown';
           const tenant = this.tenants.find(t => t.suiteId === suite._id);
           const tenantName = tenant ? tenant.name : '-';
           
@@ -250,8 +250,8 @@
       },
 
       getPropertyName(propertyId) {
-        const property = this.properties.find(p => p._id === propertyId);
-        return property ? property.name : '';
+        const Apartment = this.Apartments.find(p => p._id === propertyId);
+        return Apartment ? Apartment.name : '';
       },
 
       setupFilters() {

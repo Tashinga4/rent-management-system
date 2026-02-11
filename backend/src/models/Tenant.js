@@ -18,6 +18,19 @@ const tenantSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  compartmentNumber: {
+    type: String
+  },
+  
+  // ERD Relationship: Compartment Reference (One-to-One)
+  compartment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Compartment',
+    default: null,
+    sparse: true,  // Allow multiple null values, but unique non-null values
+    unique: true   // Only one tenant per compartment
+  },
+  
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property'
