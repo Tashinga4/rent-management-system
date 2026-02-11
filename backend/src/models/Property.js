@@ -6,12 +6,26 @@ const propertySchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
+  landlordId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Landlord ID is required'],
+    index: true
+  },
   name: {
     type: String,
-    required: true
+    required: [true, 'Property name is required'],
+    trim: true
   },
   address: {
-    type: String
+    type: String,
+    required: [true, 'Property address is required'],
+    trim: true
+  },
+  totalUnits: {
+    type: Number,
+    min: [0, 'Total units cannot be negative'],
+    default: 0
   },
   type: {
     type: String,
@@ -20,32 +34,34 @@ const propertySchema = new mongoose.Schema({
   },
   bedrooms: {
     type: Number,
-    required: true
+    required: true,
+    min: [0, 'Bedrooms cannot be negative']
   },
   bathrooms: {
     type: Number,
-    required: true
+    required: true,
+    min: [0, 'Bathrooms cannot be negative']
   },
   capacity: {
     type: Number,
     required: true,
-    min: 1
+    min: [1, 'Capacity must be at least 1']
   },
   roomsPerTenant: {
     type: Number,
     required: true,
-    min: 1
+    min: [1, 'Rooms per tenant must be at least 1']
   },
   suites: {
     type: Number,
     required: true,
-    min: 0,
+    min: [0, 'Suites cannot be negative'],
     default: 0
   },
   rent: {
     type: Number,
-    required: true,
-    min: 0
+    required: [true, 'Rent amount is required'],
+    min: [0, 'Rent cannot be negative']
   },
   description: {
     type: String
@@ -53,7 +69,8 @@ const propertySchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['vacant', 'occupied', 'maintenance'],
-    default: 'vacant'
+    default: 'vacant',
+    index: true
   },
   tenantId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -68,6 +85,10 @@ const propertySchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+// Indexes for faster queries
+// Note: landlordId and status already have inline index definitions
+propertySchema.index({ name: 1 });
 
 // Update the updatedAt timestamp before saving
 propertySchema.pre('save', function(next) {
