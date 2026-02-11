@@ -47,7 +47,8 @@ const compartmentSchema = new mongoose.Schema({
   tenant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Tenant',
-    default: null
+    default: null,
+    index: true
   },
   
   // Lease Information
@@ -86,7 +87,6 @@ const compartmentSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for faster queries
-compartmentSchema.index({ tenant: 1 });
+// Note: compartmentNumber, status, property, and tenant all have inline index definitions
 
 module.exports = mongoose.model('Compartment', compartmentSchema);

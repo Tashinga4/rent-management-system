@@ -69,7 +69,8 @@ const propertySchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['vacant', 'occupied', 'maintenance'],
-    default: 'vacant'
+    default: 'vacant',
+    index: true
   },
   tenantId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -86,6 +87,7 @@ const propertySchema = new mongoose.Schema({
 });
 
 // Indexes for faster queries
+// Note: landlordId and status already have inline index definitions
 propertySchema.index({ name: 1 });
 
 // Update the updatedAt timestamp before saving

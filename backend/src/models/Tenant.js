@@ -39,7 +39,8 @@ const tenantSchema = new mongoose.Schema({
   
   propertyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Property'
+    ref: 'Property',
+    index: true
   },
   leaseStart: {
     type: Date,
@@ -61,9 +62,8 @@ const tenantSchema = new mongoose.Schema({
   }
 });
 
-// Indexes for faster queries
-tenantSchema.index({ propertyId: 1 });
-
+// Note: email, status, and compartment already have inline index definitions
+// propertyId has an inline index definition
 // Virtual property for getting tenant's full name
 tenantSchema.virtual('fullName').get(function() {
   return `${this.firstName} ${this.lastName}`;
