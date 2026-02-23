@@ -1,18 +1,131 @@
+// Utility object to hold dashboard functions
+const DashboardUtils = {
+  // Determine payment status for a compartment for the current month
+  getCompartmentPaymentStatus(compartment, payments) {
+    const now = new Date();
+    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    if (!compartment.tenant || compartment.status === 'vacant') {
+      return { status: 'Vacant', color: 'secondary', paidAmount: 0 };
+    }
+    const tenantId = compartment.tenant._id || compartment.tenant;
+    // Match both tenant and tenantId fields for all payment records
+    const thisMonthPayments = payments.filter(p => {
+      const pDate = new Date(p.dueDate);
+      const match = (p.tenant === tenantId || (p.tenant && p.tenant._id === tenantId) ||
+                    p.tenantId === tenantId || (p.tenantId && p.tenantId._id === tenantId));
+      return match && pDate >= thisMonth && pDate < nextMonth;
+    });
+    const paidAmount = thisMonthPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const rent = compartment.rentAmount || 0;
+    let status = 'Due';
+    let color = 'warning';
+    // Determine status based on payment records
+    if (thisMonthPayments.length === 0) {
+      status = 'Due';
+      color = 'warning';
+    } else {
+      // If any payment is overdue
+      if (thisMonthPayments.some(p => p.status === 'overdue')) {
+        status = 'Overdue';
+        color = 'danger';
+      } else if (thisMonthPayments.some(p => p.status === 'partial')) {
+        status = 'Partial';
+        color = 'secondary';
+      } else if (thisMonthPayments.some(p => p.status === 'paid')) {
+        if (paidAmount > rent) {
+          status = 'Prepaid';
+          color = 'primary';
+        } else {
+          status = 'Paid';
+          color = 'success';
+        }
+      }
+    }
+    return { status, color, paidAmount };
+  },
+  // Render compartments table with payment status and paid amount
+  renderCompartmentsTable(compartments, payments) {
+    const tableBody = document.getElementById('compartmentsTableBody');
+    if (!tableBody) return;
+    tableBody.innerHTML = '';
+    compartments.forEach(compartment => {
+      const { status, color, paidAmount } = this.getCompartmentPaymentStatus(compartment, payments);
+      const tenantName = compartment.tenant && compartment.tenant.firstName ? `${compartment.tenant.firstName} ${compartment.tenant.lastName}` : (compartment.status === 'vacant' ? '—' : '-');
+      const paymentStatusDisplay = status === 'Vacant' ? '<span class="badge bg-secondary">Vacant</span>' : `<span class="badge bg-${color}">${status}</span>`;
+      const paidAmountDisplay = status === 'Vacant' ? '-' : paidAmount;
+      const contactDisplay = compartment.tenant && compartment.tenant.phone ? compartment.tenant.phone : (compartment.status === 'vacant' ? '—' : '-');
+      const whatsappBtn = (compartment.tenant && compartment.tenant.phone)
+        ? `<a href="https://wa.me/${compartment.tenant.phone.replace(/[^\d]/g, '')}" target="_blank" class="btn btn-success btn-sm" title="WhatsApp"><i class="bx bxl-whatsapp"></i></a>`
+        : '';
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${compartment.compartmentNumber}${compartment.status === 'vacant' ? 'Vacant' : 'Occupied'}</td>
+        <td>${tenantName}</td>
+        <td>${compartment.rentAmount || ''}</td>
+        <td>${paymentStatusDisplay}</td>
+        <td>${paidAmountDisplay}</td>
+        <td>${contactDisplay}</td>
+        <td>${whatsappBtn}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+};
 // Dashboard Data Manager
 class DashboardDataManager {
+    // Fetch monthly payment summary from backend
+    async fetchPaymentSummary() {
+      try {
+        const res = await fetch(`${this.apiBase}/payments/summary/monthly`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        return data.success ? data.summary : null;
+      } catch (err) {
+        console.error('Error fetching payment summary:', err);
+        return null;
+      }
+    }
+
+    // Update dashboard UI with backend summary
+    updateDashboardUIWithSummary(summary) {
+      if (!summary) return;
+      // Payment summary cards (compartments.html IDs)
+      const paidEl = document.getElementById('paymentSummaryPaid');
+      if (paidEl) paidEl.textContent = summary.paid;
+      const overdueEl = document.getElementById('paymentSummaryOverdue');
+      if (overdueEl) overdueEl.textContent = summary.overdue;
+      const partialEl = document.getElementById('paymentSummaryPartial');
+      if (partialEl) partialEl.textContent = summary.partial;
+      const upToDateEl = document.getElementById('paymentSummaryUpToDate');
+      if (upToDateEl) upToDateEl.textContent = summary.upToDate;
+      const paidInAdvanceEl = document.getElementById('paymentSummaryPaidInAdvance');
+      if (paidInAdvanceEl) paidInAdvanceEl.textContent = summary.paidInAdvance;
+      // Monthly collected
+      const monthlyCollectedEl = document.getElementById('monthlyCollected');
+      if (monthlyCollectedEl && summary.totalCollected !== undefined) {
+        monthlyCollectedEl.textContent = `$${summary.totalCollected.toFixed(2)}`;
+      }
+      // Optionally update collection percent if available
+      const collectionPercentEl = document.getElementById('collectionPercent');
+      if (collectionPercentEl && summary.collectionPercent !== undefined) {
+        collectionPercentEl.textContent = summary.collectionPercent;
+      }
+    }
   constructor() {
     this.apiBase = 'http://localhost:5000/api';
     this.paymentChart = null;
   }
 
-  async fetchTenants() {
+
+  async fetchCompartments() {
     try {
-      const res = await fetch(`${this.apiBase}/tenants`);
+      const res = await fetch(`${this.apiBase}/compartments`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       return data.success ? data.data : [];
     } catch (err) {
-      console.error('Error fetching tenants:', err);
+      console.error('Error fetching compartments:', err);
       return [];
     }
   }
@@ -41,13 +154,13 @@ class DashboardDataManager {
     }
   }
 
-  calculatePaymentMetrics(tenants, payments) {
+  calculatePaymentMetrics(compartments, payments) {
     const now = new Date();
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
     const metrics = {
-      totalCompartments: tenants.length,
+      totalCompartments: compartments.length,
       totalCollected: 0,
       paid: 0,
       overpaid: 0,
@@ -55,68 +168,85 @@ class DashboardDataManager {
       partial: 0,
       none: 0,
       dueThisWeek: 0,
-      occupancyRate: 0
+      occupancyRate: 0,
+      vacant: 0
     };
 
-    // Count active tenants for occupancy
-    metrics.occupancyRate = Math.round((tenants.filter(t => t.status === 'active').length / tenants.length) * 100) || 0;
+    // Count occupied/vacant compartments for occupancy
+    const occupied = compartments.filter(c => c.status === 'occupied' || c.tenant).length;
+    metrics.occupancyRate = Math.round((occupied / compartments.length) * 100) || 0;
+    metrics.vacant = compartments.length - occupied;
 
-    // Analyze payments
-    tenants.forEach(tenant => {
-      const tenantPayments = payments.filter(p => p.tenant === tenant._id || p.tenant._id === tenant._id);
-      
-      // Filter payments for this month
-      const thisMonthPayments = tenantPayments.filter(p => {
+    // Analyze payments by compartment
+    compartments.forEach(compartment => {
+      if (!compartment.tenant || compartment.status === 'vacant') {
+        metrics.none++;
+        return;
+      }
+      const tenantId = compartment.tenant._id || compartment.tenant;
+      // Match both tenant and tenantId fields for all payment records
+      const thisMonthPayments = payments.filter(p => {
         const pDate = new Date(p.dueDate);
-        return pDate >= thisMonth && pDate < nextMonth;
+        const match = (p.tenant === tenantId || (p.tenant && p.tenant._id === tenantId) ||
+                      p.tenantId === tenantId || (p.tenantId && p.tenantId._id === tenantId));
+        return match && pDate >= thisMonth && pDate < nextMonth;
       });
-
+      const rent = compartment.rentAmount || 0;
+      const paidAmount = thisMonthPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
       if (thisMonthPayments.length === 0) {
         metrics.none++;
+      } else if (thisMonthPayments.some(p => p.status === 'overdue')) {
+        metrics.overdue++;
+      } else if (thisMonthPayments.some(p => p.status === 'partial')) {
+        metrics.partial++;
+        metrics.totalCollected += paidAmount;
+      } else if (thisMonthPayments.some(p => p.status === 'paid')) {
+        if (paidAmount > rent) {
+          metrics.overpaid++;
+        } else {
+          metrics.paid++;
+        }
+        metrics.totalCollected += paidAmount;
       } else {
-        thisMonthPayments.forEach(payment => {
-          const rent = tenant.rentAmount || 0;
-          const amount = payment.amount || 0;
-
-          if (payment.status === 'paid') {
-            if (amount > rent) {
-              metrics.overpaid++;
-            } else {
-              metrics.paid++;
-            }
-            metrics.totalCollected += amount;
-          } else if (payment.status === 'partial') {
-            metrics.partial++;
-            metrics.totalCollected += amount;
-          } else if (payment.status === 'overdue') {
-            metrics.overdue++;
-          } else {
-            metrics.none++;
-          }
-
-          // Check if due this week
-          const dueDate = new Date(payment.dueDate);
-          const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-          if (dueDate <= oneWeekFromNow && dueDate >= now && payment.status !== 'paid') {
-            metrics.dueThisWeek++;
-          }
-        });
+        metrics.none++;
       }
+      // Check if due this week
+      thisMonthPayments.forEach(payment => {
+        const dueDate = new Date(payment.dueDate);
+        const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        if (dueDate <= oneWeekFromNow && dueDate >= now && payment.status !== 'paid') {
+          metrics.dueThisWeek++;
+        }
+      });
     });
 
     return metrics;
   }
 
   updateDashboardUI(metrics) {
-    // Update welcome card
+    // Update welcome/stat cards
     document.getElementById('totalCompartments').textContent = metrics.totalCompartments;
     document.getElementById('occupancyRate').textContent = metrics.occupancyRate;
     document.getElementById('dueThisWeek').textContent = metrics.dueThisWeek;
-
-    // Update stat cards
     document.getElementById('cardTotalCompartments').textContent = metrics.totalCompartments;
     document.getElementById('cardCompartmentPercent').textContent = '100';
 
+    // Vacant compartments
+    const vacantEl = document.getElementById('vacantCompartmentsCount');
+    if (vacantEl) {
+      vacantEl.textContent = metrics.vacant;
+    }
+
+    // Payment summary cards (compartments.html IDs)
+    const paidEl = document.getElementById('paymentSummaryPaid');
+    if (paidEl) paidEl.textContent = metrics.paid;
+    const overdueEl = document.getElementById('paymentSummaryOverdue');
+    if (overdueEl) overdueEl.textContent = metrics.overdue;
+    const partialEl = document.getElementById('paymentSummaryPartial');
+    if (partialEl) partialEl.textContent = metrics.partial;
+    // Optionally update 'none' as 'due' or 'pending' if needed
+
+    // Monthly collected
     const monthlyCollectedEl = document.getElementById('monthlyCollected');
     if (monthlyCollectedEl) {
       monthlyCollectedEl.textContent = `$${metrics.totalCollected.toFixed(2)}`;
@@ -128,13 +258,6 @@ class DashboardDataManager {
       const percent = expectedTotal > 0 ? Math.round((metrics.totalCollected / expectedTotal) * 100) : 0;
       collectionPercentEl.textContent = percent;
     }
-
-    // Update payment summary
-    document.getElementById('summaryPaid').textContent = metrics.paid;
-    document.getElementById('summaryOverpaid').textContent = metrics.overpaid;
-    document.getElementById('summaryOverdue').textContent = metrics.overdue;
-    document.getElementById('summaryPartial').textContent = metrics.partial;
-    document.getElementById('summaryNone').textContent = metrics.none;
 
     // Update chart
     this.updatePaymentChart(metrics);
@@ -186,13 +309,21 @@ class DashboardDataManager {
 
   async loadDashboard() {
     try {
-      const [tenants, payments] = await Promise.all([
-        this.fetchTenants(),
-        this.fetchPayments()
+      // Fetch compartments, payments, and summary in parallel
+      const [compartments, payments, summary] = await Promise.all([
+        this.fetchCompartments(),
+        this.fetchPayments(),
+        this.fetchPaymentSummary()
       ]);
 
-      const metrics = this.calculatePaymentMetrics(tenants, payments);
-      this.updateDashboardUI(metrics);
+      // Use backend summary for payment cards if available
+      if (summary) {
+        this.updateDashboardUIWithSummary(summary);
+      } else {
+        const metrics = this.calculatePaymentMetrics(compartments, payments);
+        this.updateDashboardUI(metrics);
+      }
+      this.renderCompartmentsTable(compartments, payments);
     } catch (err) {
       console.error('Error loading dashboard:', err);
     }

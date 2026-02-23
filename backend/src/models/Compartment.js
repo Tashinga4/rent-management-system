@@ -6,8 +6,7 @@ const compartmentSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
-    index: true
+    trim: true
   },
   name: {
     type: String,

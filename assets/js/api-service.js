@@ -1,38 +1,20 @@
-// API Configuration
+// Fallback for tenants if API fails
+const defaultTenants = [];
+// API Service Object
 const API_BASE_URL = 'http://localhost:5000/api';
 
-const defaultTenants = [
-  {
-    _id: 't-001',
-    name: 'John Doe',
-    email: 'john.doe@email.com',
-    phone: '555-0101',
-    rent: 1200,
-    rentAmount: 1200,
-    status: 'active',
-    paymentStatus: 'pending'
-  },
-  {
-    _id: 't-002',
-    name: 'Mary Johnson',
-    email: 'mary.johnson@email.com',
-    phone: '555-0102',
-    rent: 1100,
-    rentAmount: 1100,
-    status: 'active',
-    paymentStatus: 'paid'
-  },
-  {
-    _id: 't-003',
-    name: 'Samuel Clark',
-    email: 'samuel.clark@email.com',
-    phone: '555-0103',
-    rent: 1300,
-    rentAmount: 1300,
-    status: 'active',
-    paymentStatus: 'overdue'
+const ApiService = {
+  // Overdue Balance
+  async getOverdueBalance(tenantId, date = null) {
+    let url = `${API_BASE_URL}/payments/overdue-balance/${tenantId}`;
+    if (date) {
+      url += `?date=${encodeURIComponent(date)}`;
+    }
+    const response = await fetch(url);
+    return response.json();
   }
-];
+};
+
 
 const safeFetchJson = async (endpoint, cacheKey, fallback = []) => {
   try {

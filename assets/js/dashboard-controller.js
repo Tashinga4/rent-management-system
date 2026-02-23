@@ -1,5 +1,26 @@
 // Dashboard Data Controller
 class DashboardController {
+    // Fetch and display overdue balance for the first tenant (example)
+    async displayOverdueBalance() {
+      if (!this.tenants.length) return;
+      const tenant = this.tenants[0]; // Example: show for first tenant
+      const today = new Date().toISOString().split('T')[0];
+      try {
+        const result = await api.getOverdueBalance(tenant._id || tenant.id, today);
+        const overdue = result.data?.overdueBalance || 0;
+        let el = document.getElementById('dashboardOverdueBalance');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'dashboardOverdueBalance';
+          el.className = 'alert alert-danger mt-3';
+          const dash = document.querySelector('.dashboard-header, .dashboard-title, .card-title.text-primary') || document.body;
+          dash.parentNode.insertBefore(el, dash.nextSibling);
+        }
+        el.innerHTML = `<strong>Overdue Balance (as of today):</strong> $${overdue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      } catch (e) {
+        console.error('Failed to fetch overdue balance', e);
+      }
+    }
   constructor() {
     this.properties = [];
     this.suites = [];
@@ -12,6 +33,7 @@ class DashboardController {
     try {
       await this.loadAllData();
       this.updateDashboard();
+      await this.displayOverdueBalance();
     } catch (error) {
       console.error('Error initializing dashboard:', error);
       this.showError('Failed to load dashboard data. Please ensure backend is running on http://localhost:5000');
@@ -28,11 +50,11 @@ class DashboardController {
         api.getMaintenance()
       ]);
 
-      this.properties = propertiesRes.data || propertiesRes || [];
-      this.suites = suitesRes.data || suitesRes || [];
-      this.tenants = tenantsRes.data || tenantsRes || [];
-      this.payments = paymentsRes.data || paymentsRes || [];
-      this.maintenance = maintenanceRes.data || maintenanceRes || [];
+      this.properties = Array.isArray(propertiesRes.data) ? propertiesRes.data : (propertiesRes.data ? [propertiesRes.data] : (Array.isArray(propertiesRes) ? propertiesRes : []));
+      this.suites = Array.isArray(suitesRes.data) ? suitesRes.data : (suitesRes.data ? [suitesRes.data] : (Array.isArray(suitesRes) ? suitesRes : []));
+      this.tenants = Array.isArray(tenantsRes.data) ? tenantsRes.data : (tenantsRes.data ? [tenantsRes.data] : (Array.isArray(tenantsRes) ? tenantsRes : []));
+      this.payments = Array.isArray(paymentsRes.data) ? paymentsRes.data : (paymentsRes.data ? [paymentsRes.data] : (Array.isArray(paymentsRes) ? paymentsRes : []));
+      this.maintenance = Array.isArray(maintenanceRes.data) ? maintenanceRes.data : (maintenanceRes.data ? [maintenanceRes.data] : (Array.isArray(maintenanceRes) ? maintenanceRes : []));
 
       console.log('Loaded data:', {
         properties: this.properties.length,
@@ -227,22 +249,32 @@ class DashboardController {
     }
 
     recentPayments.forEach((payment, index) => {
-      const tenant = this.tenants.find(t => t.id === payment.tenantId || t._id === payment.tenantId);
-      const suite = tenant ? this.suites.find(s => s._id === tenant.suiteId) : null;
-      const property = tenant ? this.properties.find(p => p.id === tenant.propertyId || p._id === tenant.propertyId) : null;
+      // Use populated tenant/compartment if available from backend
+      let tenantName = 'Unknown Tenant';
+      if (payment.tenant && (payment.tenant.firstName || payment.tenant.lastName)) {
+        tenantName = `${payment.tenant.firstName || ''} ${payment.tenant.lastName || ''}`.trim();
+      } else if (payment.tenant && payment.tenant.name) {
+        tenantName = payment.tenant.name;
+      }
+      let compartmentName = 'Unknown Compartment';
+      if (payment.compartment && payment.compartment.compartmentNumber) {
+        compartmentName = payment.compartment.compartmentNumber;
+      } else if (payment.compartmentNumber) {
+        compartmentName = payment.compartmentNumber;
+      }
 
       const li = document.createElement('li');
       li.className = index === recentPayments.length - 1 ? 'd-flex' : 'd-flex mb-4 pb-1';
-      
+
       const amount = parseFloat(payment.amount || 0);
       const expectedAmount = parseFloat(payment.expectedAmount || payment.amount || 0);
       const difference = payment.difference || (amount - expectedAmount);
-      
+
       // Determine payment type and styling
       let statusClass = 'text-success';
       let paymentBadge = '';
       let amountDisplay = `+$${amount.toFixed(2)}`;
-      
+
       if (payment.paymentType === 'partial') {
         statusClass = 'text-warning';
         paymentBadge = '<span class="badge bg-label-warning ms-1" style="font-size: 0.7rem;">Partial</span>';
@@ -253,8 +285,6 @@ class DashboardController {
         paymentBadge = '<span class="badge bg-label-success ms-1" style="font-size: 0.7rem;">Full</span>';
       }
 
-      const avatarNum = ((payment.tenantId || index) % 7) + 1;
-      const location = suite ? `${property?.name || 'N/A'} - ${suite.suiteNumber}` : property?.name || 'N/A';
       const paymentDate = payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
 
       li.innerHTML = `
@@ -265,8 +295,8 @@ class DashboardController {
         </div>
         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
           <div class="me-2">
-            <small class="text-muted d-block mb-1">${location} • ${paymentDate}</small>
-            <h6 class="mb-0">${tenant ? tenant.name : 'Unknown Tenant'}</h6>
+            <small class="text-muted d-block mb-1">${compartmentName} • ${paymentDate}</small>
+            <h6 class="mb-0">${tenantName}</h6>
             ${difference !== 0 ? `<small class="text-muted">Expected: $${expectedAmount.toFixed(2)} • Diff: ${difference > 0 ? '+' : ''}$${difference.toFixed(2)}</small>` : ''}
           </div>
           <div class="user-progress d-flex align-items-center gap-1">
@@ -275,7 +305,7 @@ class DashboardController {
           </div>
         </div>
       `;
-      
+
       paymentsContainer.appendChild(li);
     });
   }

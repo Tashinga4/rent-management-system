@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const path = require('path');
+const emailService = require('./services/emailService');
 
 // Load environment variables
 dotenv.config();
@@ -30,8 +31,6 @@ async function connectToMongoDB(attempt = 1) {
     console.log(`⏳ MongoDB Connection Attempt ${attempt}/${serverStatus.maxRetries}...`);
     
     await mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 5000,
     });
@@ -134,22 +133,54 @@ app.get('/', (req, res) => {
 });
 
 // Routes - Using MongoDB
-try {
-  app.use('/api/properties', require('./routes/properties'));
-  app.use('/api/suites', require('./routes/suites'));
-  app.use('/api/rooms', require('./routes/rooms'));
-  app.use('/api/compartments', require('./routes/compartments'));
-  app.use('/api/tenants', require('./routes/tenants'));
-  app.use('/api/payments', require('./routes/payments'));
-  app.use('/api/maintenance', require('./routes/maintenance'));
-  app.use('/api/auth', require('./routes/auth'));
-  app.use('/api/profile', require('./routes/profile'));
-  app.use('/api/import', require('./routes/import-local'));
-} catch (routeError) {
-  console.error('❌ Route initialization error:', routeError.message);
-  console.error('Stack:', routeError.stack);
-  process.exit(1);
-}
+// Improved error handling for route initialization
+const routePaths = [
+  ['/api/properties', './routes/properties'],
+  ['/api/suites', './routes/suites'],
+  ['/api/rooms', './routes/rooms'],
+  ['/api/compartments', './routes/compartments'],
+  ['/api/tenants', './routes/tenants'],
+  ['/api/payments', './routes/payments'],
+  ['/api/maintenance', './routes/maintenance'],
+  ['/api/auth', './routes/auth'], // Authentication route
+  ['/api/profile', './routes/profile'],
+  ['/api/import', './routes/import-local']
+];
+routePaths.forEach(([path, module]) => {
+  try {
+    app.use(path, require(module));
+    // For authentication, ensure /api/auth is enabled and configured
+    // You can use JWT, Passport.js, or similar for login/register
+  } catch (routeError) {
+    console.error(`❌ Route initialization error for ${path}:`, routeError.message);
+    console.error('Stack:', routeError.stack);
+  }
+});
+
+// Add POST /api/tenants error logging middleware
+app.use('/api/tenants', (req, res, next) => {
+  if (req.method === 'POST') {
+    // Log incoming POST body for debugging
+    console.log('POST /api/tenants body:', req.body);
+    // Validate email format (allow real emails)
+    const email = req.body.email;
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format. Please enter a real email address.' });
+    }
+    // Example: send welcome email or receipt after tenant creation
+    // This is just a demonstration; actual sending should be after payment
+    if (email) {
+      emailService.sendPaymentReceipt(email, req.body.firstName + ' ' + req.body.lastName, 350, new Date().toISOString())
+        .then(() => {
+          console.log('✅ Payment receipt email sent to tenant:', email);
+        })
+        .catch(err => {
+          console.error('❌ Failed to send payment receipt email:', err.message);
+        });
+    }
+  }
+  next();
+});
 
 // API root endpoint
 app.get('/api', (req, res) => {

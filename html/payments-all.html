@@ -424,10 +424,26 @@
       };
 
       const getPaymentId = (payment) => payment.paymentId || payment.id || payment._id || 'N/A';
-      const getTenantName = (payment) =>
-        payment.tenantName || payment.tenant?.name || payment.tenant?.fullName || payment.tenant || 'Unknown Tenant';
-      const getCompartmentName = (payment) =>
-        payment.compartmentNumber || payment.compartment?.compartmentNumber || payment.unit || payment.compartmentNumber || 'Unknown Compartment';
+      const getTenantName = (payment) => {
+        if (payment.tenant && (payment.tenant.firstName || payment.tenant.lastName)) {
+          return `${payment.tenant.firstName || ''} ${payment.tenant.lastName || ''}`.trim();
+        } else if (payment.tenant && payment.tenant.name) {
+          return payment.tenant.name;
+        } else if (payment.tenantName) {
+          return payment.tenantName;
+        }
+        return 'Unknown Tenant';
+      };
+      const getCompartmentName = (payment) => {
+        if (payment.compartment && payment.compartment.compartmentNumber) {
+          return payment.compartment.compartmentNumber;
+        } else if (payment.compartmentNumber) {
+          return payment.compartmentNumber;
+        } else if (payment.unit) {
+          return payment.unit;
+        }
+        return 'Unknown Compartment';
+      };
       const getPaymentMethod = (payment) => payment.method || payment.paymentMethod || 'N/A';
       const getPaymentDate = (payment) => payment.date || payment.paidAt || payment.createdAt || payment.dueDate || '';
 
